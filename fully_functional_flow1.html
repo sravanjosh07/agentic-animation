@@ -129,21 +129,12 @@
             background: rgba(13, 21, 54, 0.7);
             border: 1px solid rgba(102, 126, 234, 0.4);
             border-radius: 20px;
-            padding: 24px 36px 64px;
+            padding: 120px 36px 64px;
             margin: 54px 0 42px;
             position: relative;
             overflow: visible;
             box-shadow: 0 30px 70px rgba(15, 23, 42, 0.55);
-            transition: box-shadow 0.35s ease, min-height 0.4s ease;
-        }
-
-        .flow-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 60px;
-            gap: 16px;
-            flex-wrap: wrap;
+            transition: box-shadow 0.35s ease;
         }
 
         .flow-visualization::before {
@@ -159,69 +150,10 @@
             box-shadow: 0 40px 90px rgba(74, 222, 128, 0.28);
         }
 
-        .flow-visualization.beam-blocked {
-            box-shadow: 0 40px 90px rgba(239, 68, 68, 0.28);
-        }
-
-        .flow-visualization.beam-redacted {
-            box-shadow: 0 40px 90px rgba(249, 115, 22, 0.28);
-        }
-
-        .cycle-controls {
-            display: flex;
-            gap: 10px;
-            z-index: 50;
-        }
-
-        .cycle-tab {
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: 1px solid rgba(148, 163, 255, 0.3);
-            background: rgba(15, 23, 42, 0.7);
-            color: rgba(226, 232, 255, 0.75);
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(8px);
-            outline: none;
-        }
-
-        .cycle-tab:hover {
-            background: rgba(15, 23, 42, 0.9);
-            border-color: rgba(148, 163, 255, 0.5);
-            color: rgba(226, 232, 255, 0.95);
-        }
-
-        .cycle-tab:focus-visible {
-            outline: 2px solid rgba(148, 163, 255, 0.8);
-            outline-offset: 2px;
-        }
-
-        .cycle-tab.is-active[data-cycle-target="approval"] {
-            border-color: rgba(74, 222, 128, 0.6);
-            background: rgba(74, 222, 128, 0.12);
-            color: rgba(74, 222, 128, 0.95);
-            box-shadow: 0 0 16px rgba(74, 222, 128, 0.25);
-        }
-
-        .cycle-tab.is-active[data-cycle-target="block"] {
-            border-color: rgba(239, 68, 68, 0.6);
-            background: rgba(239, 68, 68, 0.12);
-            color: rgba(239, 68, 68, 0.95);
-            box-shadow: 0 0 16px rgba(239, 68, 68, 0.25);
-        }
-
-        .cycle-tab.is-active[data-cycle-target="redact"] {
-            border-color: rgba(249, 115, 22, 0.6);
-            background: rgba(249, 115, 22, 0.12);
-            color: rgba(249, 115, 22, 0.95);
-            box-shadow: 0 0 16px rgba(249, 115, 22, 0.25);
-        }
-
         .flow-legend {
+            position: absolute;
+            top: 20px;
+            right: 20px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -252,6 +184,9 @@
         }
 
         .agent-label {
+            position: absolute;
+            top: -90px;
+            left: 0;
             font-size: 0.85rem;
             letter-spacing: 0.08em;
             text-transform: uppercase;
@@ -304,82 +239,12 @@
             order: 1;
         }
 
-        .approval-message.blocked {
-            color: rgba(239, 68, 68, 0.95);
-            text-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
-        }
-
-        .approval-message.redacted {
-            color: rgba(249, 115, 22, 0.95);
-            text-shadow: 0 0 12px rgba(249, 115, 22, 0.6);
-        }
-
-        .approval-message .bear-icon {
-            transition: filter 0.3s ease;
-        }
-
-        .approval-message.blocked .bear-icon {
-            filter: drop-shadow(0 2px 8px rgba(239, 68, 68, 0.4));
-        }
-
-        .approval-message.redacted .bear-icon {
-            filter: drop-shadow(0 2px 8px rgba(249, 115, 22, 0.4));
-        }
-
         .approval-message.show .bear-icon {
             animation: bearBounce 0.6s ease-out;
         }
 
         .approval-message.show {
             animation: approvalSlide 1.2s ease-out forwards;
-        }
-
-        .blocked-reason {
-            position: absolute;
-            top: 100px;
-            left: 0;
-            right: auto;
-            background: rgba(15, 23, 42, 0.92);
-            border: 1px solid rgba(239, 68, 68, 0.5);
-            border-radius: 10px;
-            padding: 10px 16px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.03em;
-            color: rgba(239, 68, 68, 0.95);
-            opacity: 0;
-            pointer-events: none;
-            z-index: 15;
-            text-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
-            white-space: nowrap;
-            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.25);
-        }
-
-        .agent-stack {
-            overflow: visible;
-        }
-
-        .blocked-reason.show {
-            animation: blockedReasonFade 3s ease-out forwards;
-        }
-
-        @keyframes blockedReasonFade {
-            0% {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            15% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            85% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
         }
 
         @keyframes bearBounce {
@@ -431,121 +296,47 @@
             --timeline-color: rgba(251, 191, 36, 0.65);
             display: grid;
             grid-template-columns: minmax(260px, 1fr) 260px minmax(260px, 1fr);
-            column-gap: 36px;
-            row-gap: 0;
+            gap: 36px;
             position: relative;
         }
 
-        .flow-row {
-            display: grid;
-            grid-template-columns: subgrid;
-            grid-column: 1 / -1;
-            position: relative;
-            min-height: 180px;
-            transition: min-height 0.4s ease, opacity 0.4s ease;
-        }
-
-        .flow-row.intermediate {
-            min-height: 90px;
-        }
-
-        .flow-row.is-hidden {
-            display: none;
-        }
-
-        .cell {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding-top: 0;
-        }
-
-        .cell.agent {
-            align-items: flex-start;
-        }
-
-        .cell.guard {
-            align-items: center;
-        }
-
-        .cell.external {
-            align-items: flex-end;
-        }
-
-        /* Event cards within cells */
-        .cell .event-card {
-            width: 100%;
-            margin: 0;
-        }
-
-        /* Amber nodes and connectors within cells */
-        .cell .amber-node {
-            position: absolute;
-            left: 20px;
-            top: 61px;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: rgba(251, 191, 36, 0.2);
-            border: 2px solid rgba(251, 191, 36, 0.6);
-            box-shadow: 0 0 0 rgba(251, 191, 36, 0);
-            opacity: 0;
-            transform: scale(0.4);
-            transition: transform 0.35s ease, opacity 0.35s ease, box-shadow 0.35s ease;
-            z-index: 3;
-        }
-
-        .cell .amber-node.active {
-            opacity: 1;
-            transform: scale(1);
-            background: rgba(251, 191, 36, 0.9);
-            box-shadow: 0 0 16px rgba(251, 191, 36, 0.4);
-        }
-
-        .cell .amber-connector {
-            position: absolute;
-            left: 20px;
-            top: 68px;
-            width: 5px;
-            background: rgba(251, 191, 36, 0.88);
-            box-shadow: 0 0 16px rgba(251, 191, 36, 0.6);
-            transform: translateX(-50%) scaleY(0);
-            transform-origin: top center;
-            opacity: 0;
-            transition: transform 0.4s ease, opacity 0.4s ease, height 0.4s ease;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .cell .amber-connector.active {
-            opacity: 1;
-            transform: translateX(-50%) scaleY(1);
-        }
-
-        /* LLM elements within intermediate row cells */
-        .flow-row.intermediate .cell.agent {
-            justify-content: center;
-        }
-
-        .flow-row.intermediate .cell.external {
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Legacy support - will be removed */
         .lane-column {
             display: flex;
             flex-direction: column;
             gap: 34px;
             position: relative;
-            transition: min-height 0.4s ease;
+            min-height: 1400px;
         }
 
-        .lane-row.is-hidden,
-        .is-hidden {
-            display: none !important;
+        .lane-column.agent {
+            position: relative;
+        }
+
+        .lane-column.agent .lane-row {
+            position: absolute;
+            width: 100%;
+            min-height: auto;
+        }
+
+        .lane-column.agent .lane-row[data-step="message-added-row"] { top: 0px; }
+        .lane-column.agent .lane-row[data-step="before-model-call-row"] { top: 170px; }
+        .lane-column.agent .lane-row[data-step="after-model-call-row"] { top: 340px; }
+        .lane-column.agent .lane-row[data-step="before-tool-call-row"] { top: 510px; }
+        .lane-column.agent .lane-row[data-step="after-tool-call-row"] { top: 680px; }
+        .lane-column.agent .lane-row[data-step="before-model-call-2-row"] { top: 850px; }
+        .lane-column.agent .lane-row[data-step="after-model-call-2-row"] { top: 1020px; }
+        .lane-column.agent .lane-row[data-step="after-invocation-row"] { top: 1190px; }
+
+        .lane-column.external .lane-row[data-step="llm-call-row"] {
+            position: absolute;
+            top: 255px;
+            width: 100%;
+        }
+
+        .lane-column.external .lane-row[data-step="llm-call-2-row"] {
+            position: absolute;
+            top: 935px;
+            width: 100%;
         }
 
         .agent-timeline-rail {
@@ -557,12 +348,13 @@
             left: 20px;
             top: 68px;
             width: 5px;
+            height: 156px;
             background: rgba(251, 191, 36, 0.88);
             box-shadow: 0 0 16px rgba(251, 191, 36, 0.6);
             transform: translateX(-50%) scaleY(0);
             transform-origin: top center;
             opacity: 0;
-            transition: transform 0.4s ease, opacity 0.4s ease, height 0.4s ease;
+            transition: transform 0.4s ease, opacity 0.4s ease;
             z-index: 1;
             pointer-events: none;
         }
@@ -673,7 +465,7 @@
         .llm-call-node {
             position: absolute;
             left: 20px;
-            top: 50%;
+            top: 316px;
             transform: translate(-50%, -50%) scale(0.4);
             transform-origin: center;
             width: 10px;
@@ -694,46 +486,44 @@
             box-shadow: 0 0 16px rgba(251, 191, 36, 0.4);
         }
 
-        .llm-connector-top,
-        .llm-connector-2-top {
+        .llm-connector-top {
             position: absolute;
             left: 20px;
-            bottom: 50%;
+            top: 238px;
             width: 5px;
-            background: rgba(251, 191, 36, 0.88);
-            box-shadow: 0 0 16px rgba(251, 191, 36, 0.6);
-            transform: translateX(-50%) scaleY(0);
-            transform-origin: bottom center;
-            opacity: 0;
-            transition: transform 0.4s ease, opacity 0.4s ease, height 0.4s ease;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .llm-connector-top.active,
-        .llm-connector-2-top.active {
-            opacity: 1;
-            transform: translateX(-50%) scaleY(1);
-        }
-
-        .llm-connector-bottom,
-        .llm-connector-2-bottom {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            width: 5px;
+            height: 73px;
             background: rgba(251, 191, 36, 0.88);
             box-shadow: 0 0 16px rgba(251, 191, 36, 0.6);
             transform: translateX(-50%) scaleY(0);
             transform-origin: top center;
             opacity: 0;
-            transition: transform 0.4s ease, opacity 0.4s ease, height 0.4s ease;
+            transition: transform 0.4s ease, opacity 0.4s ease;
             z-index: 1;
             pointer-events: none;
         }
 
-        .llm-connector-bottom.active,
-        .llm-connector-2-bottom.active {
+        .llm-connector-top.active {
+            opacity: 1;
+            transform: translateX(-50%) scaleY(1);
+        }
+
+        .llm-connector-bottom {
+            position: absolute;
+            left: 20px;
+            top: 321px;
+            width: 5px;
+            height: 73px;
+            background: rgba(251, 191, 36, 0.88);
+            box-shadow: 0 0 16px rgba(251, 191, 36, 0.6);
+            transform: translateX(-50%) scaleY(0);
+            transform-origin: top center;
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .llm-connector-bottom.active {
             opacity: 1;
             transform: translateX(-50%) scaleY(1);
         }
@@ -741,7 +531,7 @@
         .llm-call-node-2 {
             position: absolute;
             left: 20px;
-            top: 50%;
+            top: 996px;
             transform: translate(-50%, -50%) scale(0.4);
             transform-origin: center;
             width: 10px;
@@ -762,13 +552,55 @@
             box-shadow: 0 0 16px rgba(251, 191, 36, 0.4);
         }
 
+        .llm-connector-2-top {
+            position: absolute;
+            left: 20px;
+            top: 918px;
+            width: 5px;
+            height: 73px;
+            background: rgba(251, 191, 36, 0.88);
+            box-shadow: 0 0 16px rgba(251, 191, 36, 0.6);
+            transform: translateX(-50%) scaleY(0);
+            transform-origin: top center;
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .llm-connector-2-top.active {
+            opacity: 1;
+            transform: translateX(-50%) scaleY(1);
+        }
+
+        .llm-connector-2-bottom {
+            position: absolute;
+            left: 20px;
+            top: 1001px;
+            width: 5px;
+            height: 73px;
+            background: rgba(251, 191, 36, 0.88);
+            box-shadow: 0 0 16px rgba(251, 191, 36, 0.6);
+            transform: translateX(-50%) scaleY(0);
+            transform-origin: top center;
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .llm-connector-2-bottom.active {
+            opacity: 1;
+            transform: translateX(-50%) scaleY(1);
+        }
+
         .agent-external-line-2 {
             position: absolute;
             left: 20px;
-            top: 50%;
+            top: 991px;
             width: calc(var(--agent-to-external-gap) + 200px);
             height: 2px;
-            transform: translateY(-50%) translateX(0) scaleX(0);
+            transform: translateX(0) scaleX(0);
             transform-origin: left center;
             background: linear-gradient(90deg, rgba(74, 222, 128, 0.25), rgba(74, 222, 128, 0.95));
             box-shadow: 0 0 20px rgba(74, 222, 128, 0.35);
@@ -792,7 +624,7 @@
 
         .agent-external-line-2.active {
             opacity: 1;
-            transform: translateY(-50%) translateX(0) scaleX(1);
+            transform: translateX(0) scaleX(1);
         }
 
         .external-return-line-2 {
@@ -881,40 +713,6 @@
             border-bottom: 5px solid transparent;
         }
 
-        .agent-line.blocked {
-            top: calc(50% + 4px);
-            background: linear-gradient(90deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.95));
-            box-shadow: 0 0 22px rgba(239, 68, 68, 0.45);
-            transform-origin: right center;
-        }
-
-        .agent-line.blocked::after {
-            left: -2px;
-            border-right: 8px solid rgba(239, 68, 68, 0.95);
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-        }
-
-        .agent-line.return {
-            position: relative;
-        }
-
-        .redact-label {
-            position: absolute;
-            top: -22px;
-            right: 10px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            color: rgba(249, 115, 22, 0.95);
-            text-shadow: 0 0 8px rgba(249, 115, 22, 0.5);
-            white-space: nowrap;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
         .agent-line.active {
             opacity: 1;
             transform: translateY(-50%) scaleX(1);
@@ -927,10 +725,10 @@
         .agent-external-line {
             position: absolute;
             left: 20px;
-            top: 50%;
+            top: 311px;
             width: calc(var(--agent-to-external-gap) + 200px);
             height: 2px;
-            transform: translateY(-50%) translateX(0) scaleX(0);
+            transform: translateX(0) scaleX(0);
             transform-origin: left center;
             background: linear-gradient(90deg, rgba(74, 222, 128, 0.25), rgba(74, 222, 128, 0.95));
             box-shadow: 0 0 20px rgba(74, 222, 128, 0.35);
@@ -954,7 +752,7 @@
 
         .agent-external-line.active {
             opacity: 1;
-            transform: translateY(-50%) translateX(0) scaleX(1);
+            transform: translateX(0) scaleX(1);
         }
 
         .external-return-line {
@@ -972,7 +770,7 @@
                     transparent 12px);
             border-radius: 999px;
             opacity: 0;
-            transition: opacity 0.35s ease, transform 0.45s ease, top 0.4s ease;
+            transition: opacity 0.35s ease, transform 0.45s ease;
             pointer-events: none;
             z-index: 4;
         }
@@ -1099,16 +897,6 @@
             box-shadow: 0 0 24px rgba(74, 222, 128, 0.5);
         }
 
-        .flow-visualization.beam-blocked .guard-beam {
-            background: linear-gradient(180deg, rgba(239, 68, 68, 0.68), rgba(239, 68, 68, 0.28));
-            box-shadow: 0 0 24px rgba(239, 68, 68, 0.5);
-        }
-
-        .flow-visualization.beam-redacted .guard-beam {
-            background: linear-gradient(180deg, rgba(249, 115, 22, 0.68), rgba(249, 115, 22, 0.28));
-            box-shadow: 0 0 24px rgba(249, 115, 22, 0.5);
-        }
-
         .beam-flare {
             position: absolute;
             left: calc(50% + var(--saber-shift));
@@ -1126,18 +914,6 @@
         }
 
         .beam-flare.active {
-            opacity: 1;
-        }
-
-        .beam-flare.blocked {
-            background: linear-gradient(180deg, rgba(239, 68, 68, 0.42), rgba(239, 68, 68, 0.12));
-            box-shadow: 0 0 22px rgba(239, 68, 68, 0.35);
-            opacity: 1;
-        }
-
-        .beam-flare.redacted {
-            background: linear-gradient(180deg, rgba(249, 115, 22, 0.42), rgba(249, 115, 22, 0.12));
-            box-shadow: 0 0 22px rgba(249, 115, 22, 0.35);
             opacity: 1;
         }
 
@@ -1355,29 +1131,6 @@
         }
 
         /* Responsive */
-        @media (max-width: 640px) {
-            .flow-header {
-                margin-bottom: 40px;
-            }
-
-            .cycle-controls {
-                order: 1;
-                width: 100%;
-                justify-content: center;
-            }
-
-            .flow-legend {
-                order: 2;
-                width: 100%;
-                align-items: center;
-            }
-
-            .cycle-tab {
-                font-size: 0.7rem;
-                padding: 6px 12px;
-            }
-        }
-
         @media (max-width: 1060px) {
             .flow-grid {
                 grid-template-columns: 1fr 260px;
@@ -1420,8 +1173,9 @@
             .external-return-line,
             .agent-segment,
             .aiceberg-logo,
+            .agent-label,
             .approval-message,
-            .flow-header {
+            .flow-legend {
                 display: none;
             }
         }
@@ -1465,231 +1219,206 @@
         <p>Guardian Agent listens for events at key moments—before and after LLM calls, tool executions, and memory operations. When something happens, the agent sends a validation request (dotted line). Guardian Agent checks it against rules, makes a pass or block decision, and sends back an approval (solid green line). Every request and response gets linked by event IDs, so teams can trace decisions back to what triggered them. The whole thing runs without touching the core agent code.</p>
 
         <div class="flow-visualization">
-            <div class="flow-header">
-                <div class="cycle-controls" role="tablist" aria-label="Guardian Agent cycle scenarios">
-                    <button class="cycle-tab is-active" role="tab" aria-selected="true" aria-controls="flow-panel" data-cycle-target="approval" tabindex="0">Approved</button>
-                    <button class="cycle-tab" role="tab" aria-selected="false" aria-controls="flow-panel" data-cycle-target="redact" tabindex="-1">Redacted</button>
-                    <button class="cycle-tab" role="tab" aria-selected="false" aria-controls="flow-panel" data-cycle-target="block" tabindex="-1">Blocked</button>
+            <div class="flow-legend">
+                <div class="legend-item">
+                    <div class="legend-line dotted"></div>
+                    <span>Request for validation</span>
                 </div>
-                <div class="flow-legend">
-                    <div class="legend-item">
-                        <div class="legend-line dotted"></div>
-                        <span>Request for validation</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-line solid"></div>
-                        <span>Explainable approval</span>
-                    </div>
+                <div class="legend-item">
+                    <div class="legend-line solid"></div>
+                    <span>Explainable approval</span>
                 </div>
             </div>
-            <div class="flow-grid" id="flow-panel" role="tabpanel" aria-live="polite">
-                <!-- Guard Lane Globals (beam, logo, approval message) -->
-                <div style="grid-column: 2; grid-row: 1; position: relative; z-index: 100;">
-                    <img src="https://aiceberg.ai/wp-content/uploads/2025/09/Aiceberg-logo-light.svg" alt="Aiceberg" class="aiceberg-logo" style="position: absolute; top: -90px; left: 50%; transform: translateX(-50%); width: 140px;">
-                    <div class="approval-message" data-approval-message style="position: absolute; left: calc(100% + 24px); width: max-content;">
+            <div class="flow-grid">
+                <!-- Agent Lane -->
+                <div class="lane-column agent">
+                    <div class="agent-label">Agentic AI Flow</div>
+                    <div class="lane-row agent-row" data-step="message-added-row">
+                        <div class="agent-stack" data-stack="message-added">
+                            <span class="agent-node" data-node="message-added"></span>
+                            <span class="agent-connector" data-connector="message-added-to-before-model"></span>
+                            <div class="event-card agent" data-card="message-added">
+                                <h4>MessageAddedEvent</h4>
+                                <p>User asks: "Send $500 to john@example.com via our payment API"</p>
+                            </div>
+                            <span class="agent-line outbound" data-line="message-added-out"></span>
+                            <span class="agent-line return" data-line="message-added-back"></span>
+                        </div>
+                    </div>
+
+                    <div class="lane-row agent-row" data-step="before-model-call-row">
+                        <div class="agent-stack" data-stack="before-model-call">
+                            <span class="agent-node" data-node="before-model-call"></span>
+                            <div class="event-card agent" data-card="before-model-call">
+                                <h4>BeforeModelCallEvent</h4>
+                                <p>Agent prepares prompt: "Parse payment request and validate recipient"</p>
+                            </div>
+                            <span class="agent-line outbound" data-line="before-model-out"></span>
+                            <span class="agent-line return" data-line="before-model-back"></span>
+                        </div>
+                    </div>
+
+                    <span class="llm-connector-top" data-connector="before-model-to-llm"></span>
+                    <span class="llm-call-node" data-node="llm-call-node"></span>
+                    <span class="agent-external-line" data-line="llm-api-call"></span>
+                    <span class="llm-connector-bottom" data-connector="llm-to-after-model"></span>
+
+                    <div class="lane-row agent-row" data-step="after-model-call-row">
+                        <div class="agent-stack" data-stack="after-model-call">
+                            <span class="agent-node" data-node="after-model-call"></span>
+                            <span class="agent-connector" data-connector="after-model-to-before-tool"></span>
+                            <div class="event-card agent" data-card="after-model-call">
+                                <h4>AfterModelCallEvent</h4>
+                                <p>Response: "I'll use the payment tool to transfer $500 to john@example.com"</p>
+                            </div>
+                            <span class="agent-line outbound" data-line="after-model-out"></span>
+                            <span class="agent-line return" data-line="after-model-back"></span>
+                        </div>
+                    </div>
+
+                    <div class="lane-row agent-row" data-step="before-tool-call-row">
+                        <div class="agent-stack" data-stack="before-tool-call">
+                            <span class="agent-node" data-node="before-tool-call"></span>
+                            <span class="agent-connector" data-connector="before-tool-to-after-tool"></span>
+                            <div class="event-card agent" data-card="before-tool-call">
+                                <h4>BeforeToolCallEvent</h4>
+                                <p>Calling payment API: transfer($500, "john@example.com")</p>
+                            </div>
+                            <span class="agent-line outbound" data-line="before-tool-out"></span>
+                            <span class="agent-line return" data-line="before-tool-back"></span>
+                        </div>
+                    </div>
+
+                    <div class="lane-row agent-row" data-step="after-tool-call-row">
+                        <div class="agent-stack" data-stack="after-tool-call">
+                            <span class="agent-node" data-node="after-tool-call"></span>
+                            <span class="agent-connector" data-connector="after-tool-to-before-model-2"></span>
+                            <div class="event-card agent" data-card="after-tool-call">
+                                <h4>AfterToolCallEvent</h4>
+                                <p>Payment API returned: {status: "success", transaction_id: "txn_789"}</p>
+                            </div>
+                            <span class="agent-line outbound" data-line="after-tool-out"></span>
+                            <span class="agent-line return" data-line="after-tool-back"></span>
+                        </div>
+                    </div>
+
+                    <div class="lane-row agent-row" data-step="before-model-call-2-row">
+                        <div class="agent-stack" data-stack="before-model-call-2">
+                            <span class="agent-node" data-node="before-model-call-2"></span>
+                            <div class="event-card agent" data-card="before-model-call-2">
+                                <h4>BeforeModelCallEvent</h4>
+                                <p>Asking Claude to format confirmation message with transaction details</p>
+                            </div>
+                            <span class="agent-line outbound" data-line="before-model-2-out"></span>
+                            <span class="agent-line return" data-line="before-model-2-back"></span>
+                        </div>
+                    </div>
+
+                    <span class="llm-connector-2-top" data-connector="before-model-2-to-llm"></span>
+                    <span class="llm-call-node-2" data-node="llm-call-node-2"></span>
+                    <span class="agent-external-line-2" data-line="llm-api-call-2"></span>
+                    <span class="llm-connector-2-bottom" data-connector="llm-to-after-model-2"></span>
+
+                    <div class="lane-row agent-row" data-step="after-model-call-2-row">
+                        <div class="agent-stack" data-stack="after-model-call-2">
+                            <span class="agent-node" data-node="after-model-call-2"></span>
+                            <span class="agent-connector" data-connector="after-model-2-to-after-invocation"></span>
+                            <div class="event-card agent" data-card="after-model-call-2">
+                                <h4>AfterModelCallEvent</h4>
+                                <p>Formatted response: "Payment of $500 sent successfully! Txn: txn_789"</p>
+                            </div>
+                            <span class="agent-line outbound" data-line="after-model-2-out"></span>
+                            <span class="agent-line return" data-line="after-model-2-back"></span>
+                        </div>
+                    </div>
+
+                    <div class="lane-row agent-row" data-step="after-invocation-row">
+                        <div class="agent-stack" data-stack="after-invocation">
+                            <span class="agent-node" data-node="after-invocation"></span>
+                            <div class="event-card agent" data-card="after-invocation">
+                                <h4>AfterInvocationEvent</h4>
+                                <p>Final response ready to deliver to user</p>
+                            </div>
+                            <span class="agent-line outbound" data-line="after-invocation-out"></span>
+                            <span class="agent-line return" data-line="after-invocation-back"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aiceberg Lane -->
+                <div class="lane-column guard">
+                    <img src="https://aiceberg.ai/wp-content/uploads/2025/09/Aiceberg-logo-light.svg" alt="Aiceberg" class="aiceberg-logo">
+                    <div class="approval-message" data-approval-message>
                         <span class="message-text"></span>
                         <span class="bear-icon">🐻‍❄️</span>
                     </div>
                     <div class="guard-beam"></div>
                     <div class="beam-flare" data-flare></div>
-                </div>
 
-                <!-- Row 0: MessageAdded -->
-                <div class="flow-row" data-row-id="message-added" data-cycles="all">
-                    <div class="cell agent">
-                        <div class="event-card agent" data-card="message-added">
-                            <h4>MessageAddedEvent</h4>
-                            <p>User asks: "Send $500 to john@example.com via our payment API"</p>
-                        </div>
-                        <div class="amber-node" data-node="message-added"></div>
-                        <div class="amber-connector" data-connector="message-added-to-before-model"></div>
-                        <span class="agent-line outbound" data-line="message-added-out"></span>
-                        <span class="agent-line return" data-line="message-added-back">
-                            <span class="redact-label" data-redact-label="message-added-back">PII Redacted</span>
-                        </span>
-                        <span class="agent-line blocked" data-line="message-added-blocked"></span>
-                        <div class="blocked-reason" data-blocked-reason>Against Aiceberg policies, blocked: identified jailbreak</div>
-                    </div>
-                    <div class="cell guard">
+                    <div class="lane-row guard" data-step="gate-intake-row">
                         <div class="guard-pulse" data-pulse="1"></div>
                     </div>
-                    <div class="cell external"></div>
-                </div>
 
-                <!-- Row 1: BeforeModelCall -->
-                <div class="flow-row" data-row-id="before-model-call" data-cycles="approval,redact">
-                    <div class="cell agent">
-                        <div class="event-card agent" data-card="before-model-call">
-                            <h4>BeforeModelCallEvent</h4>
-                            <p>Agent prepares prompt: "Parse payment request and validate recipient"</p>
-                        </div>
-                        <div class="amber-node" data-node="before-model-call"></div>
-                        <span class="agent-line outbound" data-line="before-model-out"></span>
-                        <span class="agent-line return" data-line="before-model-back"></span>
-                    </div>
-                    <div class="cell guard">
+                    <div class="lane-row guard" data-step="gate-llm-request-row">
                         <div class="guard-pulse" data-pulse="2"></div>
                         <div class="connector solid right" data-connector="llm-dispatch" data-span="medium"></div>
                     </div>
-                    <div class="cell external"></div>
+
+                    <div class="lane-row guard" data-step="gate-llm-response-row">
+                        <div class="guard-pulse" data-pulse="3"></div>
+                    </div>
+
+                    <div class="lane-row guard" data-step="gate-tool-request-row">
+                        <div class="guard-pulse" data-pulse="4"></div>
+                        <div class="connector solid right" data-connector="tool-dispatch" data-span="medium"></div>
+                    </div>
+
+                    <div class="lane-row guard" data-step="gate-tool-response-row">
+                        <div class="guard-pulse" data-pulse="5"></div>
+                    </div>
+
+                    <div class="lane-row guard" data-step="gate-final-row">
+                        <div class="guard-pulse" data-pulse="6"></div>
+                        <div class="connector solid right" data-connector="final-release" data-span="medium"></div>
+                    </div>
                 </div>
 
-                <!-- Row 1.5: LLM Call 1 (intermediate) -->
-                <div class="flow-row intermediate" data-row-id="llm-call-1" data-cycles="approval,redact">
-                    <div class="cell agent">
-                        <div class="llm-connector-top" data-connector="before-model-to-llm"></div>
-                        <div class="llm-call-node" data-node="llm-call-node"></div>
-                        <div class="llm-connector-bottom" data-connector="llm-to-after-model"></div>
-                        <span class="agent-external-line" data-line="llm-api-call"></span>
-                    </div>
-                    <div class="cell guard"></div>
-                    <div class="cell external">
+                <!-- External Lane -->
+                <div class="lane-column external">
+                    <div class="lane-row external-placeholder" aria-hidden="true"></div>
+
+                    <div class="lane-row" data-step="llm-call-row">
                         <div class="event-card external llm" data-card="llm-call">
                             <h4>LLM call executing</h4>
                             <p>Claude analyzes request and determines payment API tool is needed</p>
                         </div>
                         <span class="external-return-line" data-line="llm-response-return"></span>
                     </div>
-                </div>
 
-                <!-- Row 2: AfterModelCall -->
-                <div class="flow-row" data-row-id="after-model-call" data-cycles="approval,redact">
-                    <div class="cell agent">
-                        <div class="event-card agent" data-card="after-model-call">
-                            <h4>AfterModelCallEvent</h4>
-                            <p>Response: "I'll use the payment tool to transfer $500 to john@example.com"</p>
-                        </div>
-                        <div class="amber-node" data-node="after-model-call"></div>
-                        <div class="amber-connector" data-connector="after-model-to-before-tool"></div>
-                        <span class="agent-line outbound" data-line="after-model-out"></span>
-                        <span class="agent-line return" data-line="after-model-back"></span>
-                    </div>
-                    <div class="cell guard">
-                        <div class="guard-pulse" data-pulse="3"></div>
-                    </div>
-                    <div class="cell external"></div>
-                </div>
+                    <div class="lane-row external-placeholder" aria-hidden="true"></div>
 
-                <!-- Row 3: BeforeToolCall -->
-                <div class="flow-row" data-row-id="before-tool-call" data-cycles="approval">
-                    <div class="cell agent">
-                        <div class="event-card agent" data-card="before-tool-call">
-                            <h4>BeforeToolCallEvent</h4>
-                            <p>Calling payment API: transfer($500, "john@example.com")</p>
-                        </div>
-                        <div class="amber-node" data-node="before-tool-call"></div>
-                        <div class="amber-connector" data-connector="before-tool-to-after-tool"></div>
-                        <span class="agent-line outbound" data-line="before-tool-out"></span>
-                        <span class="agent-line return" data-line="before-tool-back"></span>
-                    </div>
-                    <div class="cell guard">
-                        <div class="guard-pulse" data-pulse="4"></div>
-                        <div class="connector solid right" data-connector="tool-dispatch" data-span="medium"></div>
-                    </div>
-                    <div class="cell external">
+                    <div class="lane-row" data-step="tool-exec-row">
                         <div class="event-card external tool" data-card="tool-exec">
                             <h4>Payment API</h4>
                             <p>Stripe API executes: recipient verified, balance checked, $500 transferred</p>
                         </div>
                         <div class="connector dotted left" data-connector="tool-response" data-span="medium"></div>
                     </div>
-                </div>
 
-                <!-- Row 4: AfterToolCall -->
-                <div class="flow-row" data-row-id="after-tool-call" data-cycles="approval">
-                    <div class="cell agent">
-                        <div class="event-card agent" data-card="after-tool-call">
-                            <h4>AfterToolCallEvent</h4>
-                            <p>Payment API returned: {status: "success", transaction_id: "txn_789"}</p>
-                        </div>
-                        <div class="amber-node" data-node="after-tool-call"></div>
-                        <div class="amber-connector" data-connector="after-tool-to-before-model-2"></div>
-                        <span class="agent-line outbound" data-line="after-tool-out"></span>
-                        <span class="agent-line return" data-line="after-tool-back"></span>
-                    </div>
-                    <div class="cell guard">
-                        <div class="guard-pulse" data-pulse="5"></div>
-                    </div>
-                    <div class="cell external"></div>
-                </div>
+                    <div class="lane-row external-placeholder" aria-hidden="true"></div>
+                    <div class="lane-row external-placeholder" aria-hidden="true"></div>
 
-                <!-- Row 5: BeforeModelCall 2 -->
-                <div class="flow-row" data-row-id="before-model-call-2" data-cycles="approval">
-                    <div class="cell agent">
-                        <div class="event-card agent" data-card="before-model-call-2">
-                            <h4>BeforeModelCallEvent</h4>
-                            <p>Asking Claude to format confirmation message with transaction details</p>
-                        </div>
-                        <div class="amber-node" data-node="before-model-call-2"></div>
-                        <span class="agent-line outbound" data-line="before-model-2-out"></span>
-                        <span class="agent-line return" data-line="before-model-2-back"></span>
-                    </div>
-                    <div class="cell guard">
-                        <div class="guard-pulse" data-pulse="2"></div>
-                        <div class="connector solid right" data-connector="llm-dispatch" data-span="medium"></div>
-                    </div>
-                    <div class="cell external"></div>
-                </div>
-
-                <!-- Row 5.5: LLM Call 2 (intermediate) -->
-                <div class="flow-row intermediate" data-row-id="llm-call-2" data-cycles="approval">
-                    <div class="cell agent">
-                        <div class="llm-connector-2-top" data-connector="before-model-2-to-llm"></div>
-                        <div class="llm-call-node-2" data-node="llm-call-node-2"></div>
-                        <div class="llm-connector-2-bottom" data-connector="llm-to-after-model-2"></div>
-                        <span class="agent-external-line-2" data-line="llm-api-call-2"></span>
-                    </div>
-                    <div class="cell guard"></div>
-                    <div class="cell external">
+                    <div class="lane-row" data-step="llm-call-2-row">
                         <div class="event-card external llm" data-card="llm-call-2">
                             <h4>LLM call executing</h4>
                             <p>Claude formats friendly confirmation with transaction ID</p>
                         </div>
                         <span class="external-return-line-2" data-line="llm-response-2-return"></span>
                     </div>
-                </div>
 
-                <!-- Row 6: AfterModelCall 2 -->
-                <div class="flow-row" data-row-id="after-model-call-2" data-cycles="approval">
-                    <div class="cell agent">
-                        <div class="event-card agent" data-card="after-model-call-2">
-                            <h4>AfterModelCallEvent</h4>
-                            <p>Formatted response: "Payment of $500 sent successfully! Txn: txn_789"</p>
-                        </div>
-                        <div class="amber-node" data-node="after-model-call-2"></div>
-                        <div class="amber-connector" data-connector="after-model-2-to-after-invocation"></div>
-                        <span class="agent-line outbound" data-line="after-model-2-out"></span>
-                        <span class="agent-line return" data-line="after-model-2-back"></span>
-                    </div>
-                    <div class="cell guard">
-                        <div class="guard-pulse" data-pulse="3"></div>
-                    </div>
-                    <div class="cell external"></div>
-                </div>
+                    <div class="lane-row external-placeholder" aria-hidden="true"></div>
 
-                <!-- Row 7: AfterInvocation -->
-                <div class="flow-row" data-row-id="after-invocation" data-cycles="all">
-                    <div class="cell agent">
-                        <div class="event-card agent" data-card="after-invocation">
-                            <h4>AfterInvocationEvent</h4>
-                            <p>Final response ready to deliver to user</p>
-                        </div>
-                        <div class="amber-node" data-node="after-invocation"></div>
-                        <span class="agent-line outbound" data-line="after-invocation-out"></span>
-                        <span class="agent-line return" data-line="after-invocation-back"></span>
-                    </div>
-                    <div class="cell guard">
-                        <div class="guard-pulse" data-pulse="6"></div>
-                        <div class="connector solid right" data-connector="final-release" data-span="medium"></div>
-                    </div>
-                    <div class="cell external"></div>
-                </div>
-
-                <!-- Row 8: User Output -->
-                <div class="flow-row" data-row-id="user-output" data-cycles="approval">
-                    <div class="cell agent"></div>
-                    <div class="cell guard"></div>
-                    <div class="cell external">
+                    <div class="lane-row" data-step="user-output-row">
                         <div class="event-card external delivery" data-card="user-output">
                             <h4>User response delivered</h4>
                             <p>"Payment of $500 sent successfully to john@example.com! Transaction ID: txn_789"</p>
@@ -1706,7 +1435,6 @@
             const flowViz = document.querySelector('.flow-visualization');
             const beamFlare = document.querySelector('[data-flare]');
             const approvalMessageEl = document.querySelector('[data-approval-message]');
-            const blockedReasonEl = document.querySelector('[data-blocked-reason]');
 
             const approvalMessages = [
                 'Looking good!',
@@ -1731,91 +1459,7 @@
                 'Risk: basically zero'
             ];
 
-            const blockMessages = [
-                'Nope!',
-                'Hard pass',
-                'Not happening',
-                'Blocked!',
-                'That\'s a no',
-                'Against policy',
-                'Can\'t allow that',
-                'Not on my watch',
-                'Absolutely not',
-                'Denied!',
-                'Sorry, no',
-                'Not a chance',
-                'Request blocked',
-                'Nice try',
-                'Can\'t do that',
-                'Policy violation',
-                'No way',
-                'Stopped!'
-            ];
-
-            const redactMessages = [
-                'Cleaned that up',
-                'Keeping it safe',
-                'PII filtered',
-                'Nice try',
-                'Data scrubbed',
-                'Info redacted',
-                'Protected!',
-                'Sanitized',
-                'Filtered out',
-                'Privacy first',
-                'That\'s better',
-                'Redacted!',
-                'Removed PII',
-                'Cleaned up',
-                'Data secured',
-                'Info protected'
-            ];
-
-            // Content for different cycles
-            const cycleContent = {
-                approval: {
-                    'message-added': { h4: 'MessageAddedEvent', p: 'User asks: "Send $500 to john@example.com via our payment API"' },
-                    'before-model-call': { h4: 'BeforeModelCallEvent', p: 'Agent prepares prompt: "Parse payment request and validate recipient"' },
-                    'llm-call': { h4: 'LLM call executing', p: 'Claude analyzes request and determines payment API tool is needed' },
-                    'after-model-call': { h4: 'AfterModelCallEvent', p: 'Response: "I\'ll use the payment tool to transfer $500 to john@example.com"' },
-                    'before-tool-call': { h4: 'BeforeToolCallEvent', p: 'Calling payment API: transfer($500, "john@example.com")' },
-                    'tool-exec': { h4: 'Payment API', p: 'Stripe API executes: recipient verified, balance checked, $500 transferred' },
-                    'after-tool-call': { h4: 'AfterToolCallEvent', p: 'Payment API returned: {status: "success", transaction_id: "txn_789"}' },
-                    'before-model-call-2': { h4: 'BeforeModelCallEvent', p: 'Asking Claude to format confirmation message with transaction details' },
-                    'llm-call-2': { h4: 'LLM call executing', p: 'Claude formats friendly confirmation with transaction ID' },
-                    'after-model-call-2': { h4: 'AfterModelCallEvent', p: 'Formatted response: "Payment of $500 sent successfully! Txn: txn_789"' },
-                    'after-invocation': { h4: 'AfterInvocationEvent', p: 'Final response ready to deliver to user' },
-                    'user-output': { h4: 'User response delivered', p: '"Payment of $500 sent successfully to john@example.com! Transaction ID: txn_789"' }
-                },
-                block: {
-                    'message-added': { h4: 'MessageAddedEvent', p: 'User asks: "How can I hack into a system?"' },
-                    'after-invocation': { h4: 'Request Blocked', p: 'Guardian Agent blocked this request due to policy violation. No downstream tools or LLM calls executed.' }
-                },
-                redact: {
-                    'message-added': { h4: 'MessageAddedEvent', p: 'User asks: "My SSN is 123-45-6789, can you help me find auto insurance rates?"' },
-                    'before-model-call': { h4: 'BeforeModelCallEvent', p: 'Redacted prompt sent: "My SSN is [REDACTED], can you help me find auto insurance rates?"' },
-                    'llm-call': { h4: 'LLM call executing', p: 'Claude processes redacted prompt and provides insurance guidance' },
-                    'after-model-call': { h4: 'AfterModelCallEvent', p: 'Claude returns insurance guidance with no exposure of sensitive data' },
-                    'after-invocation': { h4: 'AfterInvocationEvent', p: 'Safe response delivered with PII protected throughout the flow' }
-                }
-            };
-
-            let currentCycle = 'block';
-
-            function updateCardContent(cardId, cycle) {
-                const content = cycleContent[cycle]?.[cardId];
-                if (!content) return;
-
-                const card = document.querySelector(`[data-card="${cardId}"]`);
-                if (!card) return;
-
-                const h4 = card.querySelector('h4');
-                const p = card.querySelector('p');
-                if (h4) h4.textContent = content.h4;
-                if (p) p.textContent = content.p;
-            }
-
-            const stepsApproval = [
+            const steps = [
                 { cards: ['message-added'], nodes: ['message-added'] },
                 { lines: ['message-added-out'], waitingNodes: ['message-added'] },
                 { pulses: ['1'], beam: true, bearPosition: 'message-added-back' },
@@ -1868,51 +1512,10 @@
                 { lines: ['after-invocation-out'], waitingNodes: ['after-invocation'] },
                 { pulses: ['6'], beam: true, bearPosition: 'after-invocation-back' },
                 { lines: ['after-invocation-back'] },
-                { clearWaitingNodes: ['after-invocation'] },
-                { cards: ['user-output'] }
-            ];
-
-            const stepsBlock = [
-                { cards: ['message-added'], nodes: ['message-added'] },
-                { lines: ['message-added-out'], waitingNodes: ['message-added'] },
-                { pulses: ['1'], beam: true, bearPosition: 'blocked-response', beamType: 'block' },
-                { lines: ['message-added-blocked'], showBlockedReason: true, clearWaitingNodes: ['message-added'] },
-                { cards: ['after-invocation'] }
-            ];
-
-            const stepsRedact = [
-                { cards: ['message-added'], nodes: ['message-added'] },
-                { lines: ['message-added-out'], waitingNodes: ['message-added'] },
-                { pulses: ['1'], beam: true, bearPosition: 'redacted-response', beamType: 'redact' },
-                { lines: ['message-added-back'], showRedactLabel: true },
-                { clearWaitingNodes: ['message-added'] },
-
-                { cards: ['before-model-call'], nodes: ['before-model-call'], connectors: ['message-added-to-before-model'] },
-                { lines: ['before-model-out'], waitingNodes: ['before-model-call'] },
-                { pulses: ['2'], beam: true, bearPosition: 'before-model-back', beamType: 'redact' },
-                { lines: ['before-model-back'] },
-                { clearWaitingNodes: ['before-model-call'] },
-                { nodes: ['llm-call-node'], connectors: ['before-model-to-llm'] },
-                { lines: ['llm-api-call'] },
-                { cards: ['llm-call'] },
-                { lines: ['llm-response-return'] },
-
-                { cards: ['after-model-call'], nodes: ['after-model-call'], connectors: ['llm-to-after-model'] },
-                { lines: ['after-model-out'], waitingNodes: ['after-model-call'] },
-                { pulses: ['3'], beam: true, bearPosition: 'after-model-back', beamType: 'redact' },
-                { lines: ['after-model-back'] },
-                { clearWaitingNodes: ['after-model-call'] },
-
-                { cards: ['after-invocation'], nodes: ['after-invocation'], connectors: ['after-model-to-before-tool'] },
-                { lines: ['after-invocation-out'], waitingNodes: ['after-invocation'] },
-                { pulses: ['4'], beam: true, bearPosition: 'after-invocation-back', beamType: 'redact' },
-                { lines: ['after-invocation-back'] },
                 { clearWaitingNodes: ['after-invocation'] }
             ];
 
-            let steps = stepsBlock;
-
-            const stepDuration = 400;
+            const stepDuration = 800;
             let timerId = null;
             let currentStep = 0;
             let beamTimeout = null;
@@ -1924,26 +1527,12 @@
             const nodeElements = document.querySelectorAll('[data-node]');
             const pulseElements = document.querySelectorAll('.guard-pulse');
 
-            function triggerBeam(bearPosition, type = 'approval') {
+            function triggerBeam(bearPosition) {
                 if (!flowViz || !beamFlare) return;
+                flowViz.classList.add('beam-active');
+                beamFlare.classList.add('active');
 
-                // Clear previous beam states
-                flowViz.classList.remove('beam-active', 'beam-blocked', 'beam-redacted');
-                beamFlare.classList.remove('active', 'blocked', 'redacted');
-
-                // Set appropriate beam state
-                if (type === 'block') {
-                    flowViz.classList.add('beam-blocked');
-                    beamFlare.classList.add('blocked');
-                } else if (type === 'redact') {
-                    flowViz.classList.add('beam-redacted');
-                    beamFlare.classList.add('redacted');
-                } else {
-                    flowViz.classList.add('beam-active');
-                    beamFlare.classList.add('active');
-                }
-
-                // Show random message based on type
+                // Show random approval message
                 if (approvalMessageEl && bearPosition) {
                     // Map return line IDs to row positions (matching each unique green return line)
                     const linePositions = {
@@ -1952,48 +1541,30 @@
                         'after-model-back': 375,         // row 340
                         'before-model-2-back': 885,      // row 850
                         'after-model-2-back': 1055,      // row 1020
-                        'after-invocation-back': 1225,   // row 1190
-                        'blocked-response': 35,          // block at first row
-                        'redacted-response': 35          // redact at first row
+                        'after-invocation-back': 1225    // row 1190
                     };
 
                     const topPosition = linePositions[bearPosition] || 35;
                     approvalMessageEl.style.top = `${topPosition}px`;
 
-                    // Choose message array based on type
-                    let messageArray = approvalMessages;
-                    if (type === 'block') {
-                        messageArray = blockMessages;
-                    } else if (type === 'redact') {
-                        messageArray = redactMessages;
-                    }
-
-                    const randomMessage = messageArray[Math.floor(Math.random() * messageArray.length)];
+                    const randomMessage = approvalMessages[Math.floor(Math.random() * approvalMessages.length)];
                     const messageText = approvalMessageEl.querySelector('.message-text');
                     if (messageText) {
                         messageText.textContent = randomMessage;
                     }
-
-                    // Set color class for message
-                    approvalMessageEl.classList.remove('show', 'blocked', 'redacted');
-                    if (type === 'block') {
-                        approvalMessageEl.classList.add('blocked');
-                    } else if (type === 'redact') {
-                        approvalMessageEl.classList.add('redacted');
-                    }
-
+                    approvalMessageEl.classList.remove('show');
                     void approvalMessageEl.offsetWidth; // Trigger reflow
                     approvalMessageEl.classList.add('show');
                 }
 
                 clearTimeout(beamTimeout);
                 beamTimeout = setTimeout(() => {
-                    flowViz.classList.remove('beam-active', 'beam-blocked', 'beam-redacted');
-                    beamFlare.classList.remove('active', 'blocked', 'redacted');
+                    flowViz.classList.remove('beam-active');
+                    beamFlare.classList.remove('active');
                 }, 1000);
             }
 
-            function setActiveState({ cards = [], lines = [], clearLines = [], nodes = [], waitingNodes = [], clearWaitingNodes = [], connectors = [], clearConnectors = [], pulses = [], beam = false, bearPosition = null, beamType = 'approval', showBlockedReason = false, showRedactLabel = false }) {
+            function setActiveState({ cards = [], lines = [], clearLines = [], nodes = [], waitingNodes = [], clearWaitingNodes = [], connectors = [], clearConnectors = [], pulses = [], beam = false, bearPosition = null }) {
                 cards.forEach(id => {
                     document.querySelectorAll(`[data-card="${id}"]`).forEach(card => {
                         card.classList.add('active');
@@ -2058,24 +1629,7 @@
                 });
 
                 if (beam && bearPosition) {
-                    triggerBeam(bearPosition, beamType);
-                }
-
-                // Show blocked reason
-                if (showBlockedReason && blockedReasonEl) {
-                    blockedReasonEl.classList.remove('show');
-                    void blockedReasonEl.offsetWidth;
-                    blockedReasonEl.classList.add('show');
-                }
-
-                // Show redact label on the arrow
-                if (showRedactLabel) {
-                    lines.forEach(id => {
-                        const label = document.querySelector(`[data-redact-label="${id}"]`);
-                        if (label) {
-                            label.style.opacity = '1';
-                        }
-                    });
+                    triggerBeam(bearPosition);
                 }
             }
 
@@ -2096,161 +1650,10 @@
                 // Clear all lines including external lines
                 document.querySelectorAll('[data-line]').forEach(el => el.classList.remove('active'));
 
-                // Clear redact labels
-                document.querySelectorAll('[data-redact-label]').forEach(el => el.style.opacity = '0');
-
-                flowViz?.classList.remove('beam-active', 'beam-blocked', 'beam-redacted', 'cycle-block', 'cycle-redact', 'cycle-approval');
-                beamFlare?.classList.remove('active', 'blocked', 'redacted');
-                if (approvalMessageEl) {
-                    approvalMessageEl.classList.remove('show', 'blocked', 'redacted');
-                }
-                if (blockedReasonEl) {
-                    blockedReasonEl.classList.remove('show');
-                }
+                flowViz?.classList.remove('beam-active');
+                beamFlare?.classList.remove('active');
                 clearTimeout(beamTimeout);
                 currentStep = 0;
-            }
-
-            let userSelectedCycle = false;
-            let autoplayResumeTimer = null;
-            const AUTOPLAY_RESUME_DELAY = 15000; // 15 seconds
-
-            // Layout constants
-            const LAYOUT_CONSTANTS = {
-                CARD_HEIGHT: 122,
-                NODE_CENTER_OFFSET: 61,
-                CONNECTOR_START_OFFSET: 68,
-                LLM_NODE_HEIGHT: 10,
-                CONTAINER_BOTTOM_PADDING: 64,
-                CONTAINER_TOP_PADDING: 24
-            };
-
-            // Layout metadata per cycle (simplified for row-based layout)
-            const layoutMeta = {
-                block: {
-                    rowGap: 110,
-                    visibleRows: ['message-added', 'after-invocation']
-                },
-                redact: {
-                    rowGap: 180,
-                    visibleRows: ['message-added', 'before-model-call', 'llm-call-1', 'after-model-call', 'after-invocation']
-                },
-                approval: {
-                    rowGap: 170,
-                    visibleRows: ['message-added', 'before-model-call', 'llm-call-1', 'after-model-call',
-                                  'before-tool-call', 'after-tool-call', 'before-model-call-2', 'llm-call-2',
-                                  'after-model-call-2', 'after-invocation', 'user-output']
-                }
-            };
-
-            function updateTabStates() {
-                document.querySelectorAll('.cycle-tab').forEach(tab => {
-                    const target = tab.getAttribute('data-cycle-target');
-                    const isActive = target === currentCycle;
-
-                    tab.classList.toggle('is-active', isActive);
-                    tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
-                    tab.setAttribute('tabindex', isActive ? '0' : '-1');
-                });
-            }
-
-            function calculateRowPosition(rowIndex, rowGap) {
-                return rowIndex * rowGap;
-            }
-
-            function calculateLLMNodePosition(beforeRowIndex, rowGap) {
-                const beforeRowPos = calculateRowPosition(beforeRowIndex, rowGap);
-                return beforeRowPos + LAYOUT_CONSTANTS.NODE_CENTER_OFFSET + (rowGap / 2);
-            }
-
-            function calculateConnectorHeight(rowGap) {
-                return rowGap - 14;
-            }
-
-            function calculateLLMConnectorHeight(rowGap) {
-                return (rowGap / 2) - 5;
-            }
-
-            function calculateContainerHeight(numRows, rowGap) {
-                return ((numRows - 1) * rowGap) + LAYOUT_CONSTANTS.CARD_HEIGHT + LAYOUT_CONSTANTS.CONTAINER_BOTTOM_PADDING;
-            }
-
-            function applyCycleState(cycleId) {
-                const layout = layoutMeta[cycleId];
-                if (!layout) return;
-
-                const rowGap = layout.rowGap;
-                const visibleRows = layout.visibleRows;
-
-                // Hide all rows first
-                document.querySelectorAll('.flow-row').forEach(row => {
-                    row.classList.add('is-hidden');
-                });
-
-                // Show rows that match this cycle
-                visibleRows.forEach(rowId => {
-                    const row = document.querySelector(`[data-row-id="${rowId}"]`);
-                    if (row) {
-                        row.classList.remove('is-hidden');
-                        // Set row height: intermediate rows are half-height
-                        const isIntermediate = row.classList.contains('intermediate');
-                        row.style.minHeight = isIntermediate ? `${rowGap / 2}px` : `${rowGap}px`;
-                    }
-                });
-
-                // Update amber connector heights for this rowGap
-                document.querySelectorAll('.amber-connector').forEach(conn => {
-                    conn.style.height = `${rowGap - 14}px`;
-                });
-
-                // Update LLM connector heights (half of rowGap minus small offset)
-                const llmConnectorHeight = (rowGap / 2) - 5;
-                document.querySelectorAll('.llm-connector-top, .llm-connector-bottom, .llm-connector-2-top, .llm-connector-2-bottom').forEach(conn => {
-                    conn.style.height = `${llmConnectorHeight}px`;
-                });
-
-                flowViz.dataset.cycle = cycleId;
-            }
-
-            function startCycleAt(cycleId) {
-                clearTimeout(timerId);
-                clearTimeout(autoplayResumeTimer);
-
-                currentCycle = cycleId;
-
-                // Update steps based on cycle
-                if (currentCycle === 'block') {
-                    steps = stepsBlock;
-                } else if (currentCycle === 'redact') {
-                    steps = stepsRedact;
-                } else {
-                    steps = stepsApproval;
-                }
-
-                // Apply layout state (CSS variables + visibility)
-                applyCycleState(currentCycle);
-
-                // Update cycle class on flow visualization for beam colors
-                flowViz?.classList.remove('cycle-block', 'cycle-redact', 'cycle-approval');
-                flowViz?.classList.add(`cycle-${currentCycle}`);
-
-                // Update card content for new cycle
-                Object.keys(cycleContent[currentCycle]).forEach(cardId => {
-                    updateCardContent(cardId, currentCycle);
-                });
-
-                // Update tab states
-                updateTabStates();
-
-                // Restart animation
-                resetFlow();
-
-                if (prefersReducedMotion) {
-                    steps.forEach(step => setActiveState(step));
-                    return;
-                }
-
-                timerId = setTimeout(playNextStep, 500);
             }
 
             function playNextStep() {
@@ -2258,18 +1661,9 @@
                     clearTimeout(timerId);
                     timerId = setTimeout(() => {
                         resetFlow();
-
-                        // Only auto-advance if user hasn't selected a cycle
-                        if (!userSelectedCycle) {
-                            const nextCycle = currentCycle === 'approval' ? 'redact' :
-                                             currentCycle === 'redact' ? 'block' : 'approval';
-                            startCycleAt(nextCycle);
-                        } else {
-                            // Loop the current cycle if user selected it
-                            requestAnimationFrame(() => {
-                                timerId = setTimeout(playNextStep, 500);
-                            });
-                        }
+                        requestAnimationFrame(() => {
+                            timerId = setTimeout(playNextStep, 500);
+                        });
                     }, 2400);
                     return;
                 }
@@ -2279,83 +1673,8 @@
                 timerId = setTimeout(playNextStep, stepDuration);
             }
 
-            function handleTabClick(event) {
-                const tab = event.currentTarget;
-                const targetCycle = tab.getAttribute('data-cycle-target');
-
-                if (!targetCycle) return;
-
-                // If clicking already active tab, resume autoplay
-                if (targetCycle === currentCycle && userSelectedCycle) {
-                    userSelectedCycle = false;
-                    clearTimeout(autoplayResumeTimer);
-                    return;
-                }
-
-                // User manually selected a cycle, pause autoplay
-                userSelectedCycle = true;
-                startCycleAt(targetCycle);
-
-                // Resume autoplay after 15 seconds of inactivity
-                clearTimeout(autoplayResumeTimer);
-                autoplayResumeTimer = setTimeout(() => {
-                    userSelectedCycle = false;
-                }, AUTOPLAY_RESUME_DELAY);
-            }
-
-            function handleTabKeydown(event) {
-                const tabs = Array.from(document.querySelectorAll('.cycle-tab'));
-                const currentIndex = tabs.indexOf(event.currentTarget);
-                let targetIndex = currentIndex;
-
-                switch(event.key) {
-                    case 'ArrowLeft':
-                    case 'ArrowUp':
-                        event.preventDefault();
-                        targetIndex = currentIndex > 0 ? currentIndex - 1 : tabs.length - 1;
-                        break;
-                    case 'ArrowRight':
-                    case 'ArrowDown':
-                        event.preventDefault();
-                        targetIndex = currentIndex < tabs.length - 1 ? currentIndex + 1 : 0;
-                        break;
-                    case 'Home':
-                        event.preventDefault();
-                        targetIndex = 0;
-                        break;
-                    case 'End':
-                        event.preventDefault();
-                        targetIndex = tabs.length - 1;
-                        break;
-                    case 'Enter':
-                    case ' ':
-                        event.preventDefault();
-                        handleTabClick(event);
-                        return;
-                    default:
-                        return;
-                }
-
-                tabs[targetIndex].focus();
-            }
-
             function initFlow() {
-                // Initialize with approval cycle content
-                currentCycle = 'approval';
-                steps = stepsApproval;
-
-                // Apply initial layout
-                applyCycleState(currentCycle);
-
-                flowViz?.classList.add('cycle-approval');
-                Object.keys(cycleContent[currentCycle]).forEach(cardId => {
-                    updateCardContent(cardId, currentCycle);
-                });
-
-                updateTabStates();
-
                 if (prefersReducedMotion) {
-                    applyCycleState(currentCycle);
                     steps.forEach(step => setActiveState(step));
                     return;
                 }
@@ -2366,16 +1685,9 @@
             document.addEventListener('visibilitychange', () => {
                 if (document.hidden) {
                     clearTimeout(timerId);
-                    clearTimeout(autoplayResumeTimer);
                 } else {
                     initFlow();
                 }
-            });
-
-            // Add click and keyboard handlers to cycle tabs
-            document.querySelectorAll('.cycle-tab').forEach(tab => {
-                tab.addEventListener('click', handleTabClick);
-                tab.addEventListener('keydown', handleTabKeydown);
             });
 
             initFlow();
