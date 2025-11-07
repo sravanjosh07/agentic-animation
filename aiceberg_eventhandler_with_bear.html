@@ -1,0 +1,2748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aiceberg Guardian Agent - Real-Time Visibility for Agentic AI</title>
+    <style>
+        :root {
+            --agent-accent: #fbbf24;
+            --guard-accent: #4ade80;
+            --llm-accent: #c084fc;
+            --tool-accent: #fcd34d;
+            --external-accent: #60a5fa;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            background-attachment: fixed;
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px 90px;
+        }
+
+        /* Hero Section */
+        .hero-title {
+            text-align: center;
+            padding: 40px 0 30px;
+        }
+
+        .hero-title .hero-kicker {
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 255, 0.4);
+            background: rgba(148, 163, 255, 0.08);
+            color: rgba(226, 232, 255, 0.85);
+            font-size: 0.85rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .hero-title h1 {
+            font-size: 3.4em;
+            margin-bottom: 18px;
+            background: linear-gradient(135deg, #a5b4fc 0%, #c084fc 50%, #22d3ee 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInDown 1s ease;
+        }
+
+        .hero-title p {
+            font-size: 1.25em;
+            color: rgba(255, 255, 255, 0.82);
+            max-width: 780px;
+            margin: 0 auto;
+            animation: fadeIn 1.4s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Stat Box */
+        .stat-box {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.35), rgba(118, 75, 162, 0.45));
+            padding: 48px 44px;
+            border-radius: 16px;
+            margin: 60px 0;
+            text-align: center;
+            box-shadow: 0 24px 60px rgba(102, 126, 234, 0.35);
+            border: 1px solid rgba(148, 163, 255, 0.35);
+        }
+
+        .stat-box h2 {
+            color: #fff;
+            font-size: 2.1em;
+            margin: 0 0 18px 0;
+        }
+
+        .stat-box p {
+            color: rgba(255, 255, 255, 0.88);
+            font-size: 1.18em;
+            margin: 0;
+        }
+
+        /* Section Titles */
+        h2 {
+            color: #a5b4fc;
+            margin: 60px 0 24px;
+            font-size: 2.1em;
+            letter-spacing: 0.02em;
+        }
+
+        p {
+            font-size: 1.08em;
+            color: rgba(255, 255, 255, 0.78);
+            margin-bottom: 18px;
+        }
+
+        /* Flow Visualization */
+        .flow-visualization {
+            background: rgba(13, 21, 54, 0.7);
+            border: 1px solid rgba(102, 126, 234, 0.4);
+            border-radius: 20px;
+            padding: 24px 36px 64px;
+            margin: 54px 0 42px;
+            position: relative;
+            overflow: visible;
+            box-shadow: 0 30px 70px rgba(15, 23, 42, 0.55);
+            transition: box-shadow 0.35s ease, min-height 0.4s ease;
+        }
+
+        .flow-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .flow-visualization::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            background: radial-gradient(circle at top, rgba(102, 126, 234, 0.16), transparent 70%);
+            pointer-events: none;
+        }
+
+        .flow-visualization.beam-active {
+            box-shadow: 0 40px 90px rgba(74, 222, 128, 0.28);
+        }
+
+        .flow-visualization.beam-blocked {
+            box-shadow: 0 40px 90px rgba(239, 68, 68, 0.28);
+        }
+
+        .flow-visualization.beam-redacted {
+            box-shadow: 0 40px 90px rgba(249, 115, 22, 0.28);
+        }
+
+        .cycle-controls {
+            display: flex;
+            gap: 10px;
+            z-index: 50;
+        }
+
+        .cycle-tab {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(148, 163, 255, 0.3);
+            background: rgba(15, 23, 42, 0.7);
+            color: rgba(226, 232, 255, 0.75);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+            outline: none;
+        }
+
+        .cycle-tab:hover {
+            background: rgba(15, 23, 42, 0.9);
+            border-color: rgba(148, 163, 255, 0.5);
+            color: rgba(226, 232, 255, 0.95);
+        }
+
+        .cycle-tab:focus-visible {
+            outline: 2px solid rgba(148, 163, 255, 0.8);
+            outline-offset: 2px;
+        }
+
+        .cycle-tab.is-active[data-cycle-target="approval"] {
+            border-color: rgba(74, 222, 128, 0.6);
+            background: rgba(74, 222, 128, 0.12);
+            color: rgba(74, 222, 128, 0.95);
+            box-shadow: 0 0 16px rgba(74, 222, 128, 0.25);
+        }
+
+        .cycle-tab.is-active[data-cycle-target="block"] {
+            border-color: rgba(239, 68, 68, 0.6);
+            background: rgba(239, 68, 68, 0.12);
+            color: rgba(239, 68, 68, 0.95);
+            box-shadow: 0 0 16px rgba(239, 68, 68, 0.25);
+        }
+
+        .cycle-tab.is-active[data-cycle-target="redact"] {
+            border-color: rgba(249, 115, 22, 0.6);
+            background: rgba(249, 115, 22, 0.12);
+            color: rgba(249, 115, 22, 0.95);
+            box-shadow: 0 0 16px rgba(249, 115, 22, 0.25);
+        }
+
+        .flow-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 0;
+            z-index: 50;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.75rem;
+            color: rgba(226, 232, 255, 0.85);
+        }
+
+        .legend-line {
+            width: 40px;
+            height: 2px;
+            border-radius: 999px;
+        }
+
+        .legend-line.dotted {
+            background: repeating-linear-gradient(90deg, rgba(147, 197, 253, 0.85) 0, rgba(147, 197, 253, 0.85) 6px, transparent 6px, transparent 12px);
+        }
+
+        .legend-line.solid {
+            background: linear-gradient(90deg, rgba(74, 222, 128, 0.5), rgba(74, 222, 128, 0.95));
+        }
+
+        .agent-label {
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(251, 191, 36, 0.9);
+            font-weight: 600;
+            z-index: 50;
+        }
+
+        .aiceberg-logo {
+            position: absolute;
+            top: -90px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 160px;
+            height: auto;
+            z-index: 50;
+            opacity: 0.95;
+            filter: drop-shadow(0 4px 12px rgba(74, 222, 128, 0.3));
+        }
+
+        .approval-message {
+            position: absolute;
+            top: 0;
+            left: calc(50% + var(--saber-shift) + 30px);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: rgba(74, 222, 128, 0.95);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 60;
+            text-shadow: 0 0 12px rgba(74, 222, 128, 0.6);
+            white-space: nowrap;
+            transition: top 0.3s ease;
+        }
+
+        .approval-message .bear-icon {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 2px 8px rgba(74, 222, 128, 0.4));
+            display: inline-block;
+            order: 2;
+        }
+
+        .approval-message .message-text {
+            order: 1;
+        }
+
+        .approval-message.blocked {
+            color: rgba(239, 68, 68, 0.95);
+            text-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+        }
+
+        .approval-message.redacted {
+            color: rgba(249, 115, 22, 0.95);
+            text-shadow: 0 0 12px rgba(249, 115, 22, 0.6);
+        }
+
+        .approval-message .bear-icon {
+            transition: filter 0.3s ease;
+        }
+
+        .approval-message.blocked .bear-icon {
+            filter: drop-shadow(0 2px 8px rgba(239, 68, 68, 0.4));
+        }
+
+        .approval-message.redacted .bear-icon {
+            filter: drop-shadow(0 2px 8px rgba(249, 115, 22, 0.4));
+        }
+
+        .approval-message.show .bear-icon {
+            animation: bearBounce 0.6s ease-out;
+        }
+
+        .approval-message.show {
+            animation: approvalSlide 1.2s ease-out forwards;
+        }
+
+        .blocked-reason {
+            position: absolute;
+            top: 100px;
+            left: 0;
+            right: auto;
+            background: rgba(15, 23, 42, 0.92);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            color: rgba(239, 68, 68, 0.95);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 15;
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+            white-space: nowrap;
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.25);
+        }
+
+        .agent-stack {
+            overflow: visible;
+        }
+
+        .blocked-reason.show {
+            animation: blockedReasonFade 3s ease-out forwards;
+        }
+
+        @keyframes blockedReasonFade {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            15% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            85% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes bearBounce {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes approvalSlide {
+            0% {
+                opacity: 0;
+            }
+            15% {
+                opacity: 1;
+            }
+            85% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .flow-grid {
+            --lane-gap: clamp(180px, 18vw, 240px);
+            --timeline-gap: 80px;
+            --saber-shift: 26px;
+            --saber-buffer: 30px;
+            --saber-core-width: 6px;
+            --guard-to-agent-gap: calc(var(--lane-gap) + var(--saber-shift));
+            --guard-to-external-gap: calc(var(--lane-gap) - var(--saber-shift));
+            --agent-to-external-gap: calc(var(--guard-to-agent-gap) + var(--guard-to-external-gap));
+            --timeline-color: rgba(251, 191, 36, 0.65);
+            display: grid;
+            grid-template-columns: minmax(200px, 0.85fr) 260px minmax(200px, 0.85fr);
+            column-gap: 36px;
+            row-gap: 0;
+            position: relative;
+            min-height: 800px;
+        }
+
+        .flow-row {
+            display: grid;
+            grid-template-columns: subgrid;
+            grid-column: 1 / -1;
+            position: relative;
+            min-height: 180px;
+            transition: min-height 0.4s ease, opacity 0.4s ease;
+        }
+
+        .flow-row.intermediate {
+            min-height: 90px;
+        }
+
+        .flow-row.is-hidden {
+            display: none;
+        }
+
+        .cell {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 0;
+        }
+
+        .cell.agent {
+            align-items: flex-start;
+            padding-left: 36px;
+        }
+
+        .cell.guard {
+            align-items: center;
+        }
+
+        .cell.external {
+            align-items: flex-end;
+        }
+
+        /* Event cards within cells */
+        .cell .event-card {
+            width: 100%;
+            margin: 0;
+        }
+
+        /* Amber nodes and connectors within cells */
+        .cell .amber-node {
+            position: absolute;
+            left: 20px;
+            top: 61px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(251, 191, 36, 0.2);
+            border: 2px solid rgba(251, 191, 36, 0.6);
+            box-shadow: 0 0 0 rgba(251, 191, 36, 0);
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.4);
+            transform-origin: center;
+            transition: transform 0.35s ease, opacity 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+            z-index: 3;
+        }
+
+        .cell .amber-node::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.45), rgba(251, 191, 36, 0));
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        .cell .amber-node.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            background: rgba(251, 191, 36, 0.9);
+            box-shadow: 0 0 18px rgba(251, 191, 36, 0.35);
+        }
+
+        .cell .amber-node.active::after {
+            opacity: 0.4;
+        }
+
+        .cell .amber-node.waiting {
+            animation: nodeWaiting 1.1s ease-in-out infinite;
+            box-shadow: 0 0 22px rgba(251, 191, 36, 0.6);
+        }
+
+        .cell .amber-node.waiting::before {
+            content: '';
+            position: absolute;
+            inset: -12px;
+            border-radius: 50%;
+            border: 2.5px solid rgba(251, 191, 36, 0.7);
+            animation: ripple 1.8s ease-out infinite;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .cell .amber-node.waiting::after {
+            content: '';
+            position: absolute;
+            inset: -12px;
+            border-radius: 50%;
+            border: 2.5px solid rgba(251, 191, 36, 0.5);
+            animation: ripple 1.8s ease-out infinite 0.6s;
+            pointer-events: none;
+            background: transparent;
+            z-index: 10;
+        }
+
+        .cell .amber-connector {
+            position: absolute;
+            left: 20px;
+            top: 68px;
+            width: 5px;
+            background: rgba(251, 191, 36, 0.88);
+            box-shadow: 0 0 16px rgba(251, 191, 36, 0.6);
+            transform: translateX(-50%) scaleY(0);
+            transform-origin: top center;
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease, height 0.4s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .cell .amber-connector.active {
+            opacity: 1;
+            transform: translateX(-50%) scaleY(1);
+        }
+
+        .cell .amber-rail {
+            position: absolute;
+            left: 20px;
+            width: 5px;
+            background: linear-gradient(180deg, rgba(251, 191, 36, 0.25), rgba(251, 191, 36, 0.15));
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+            transform: translateX(-50%) scaleY(0);
+            transform-origin: top;
+            opacity: 0;
+            transition: transform 0.5s ease, opacity 0.5s ease, height 0.5s ease, background 0.3s ease;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .cell .amber-rail.active {
+            opacity: 1;
+            transform: translateX(-50%) scaleY(1);
+            background: linear-gradient(180deg, rgba(251, 191, 36, 0.75), rgba(251, 191, 36, 0.45));
+            box-shadow: 0 0 16px rgba(251, 191, 36, 0.5);
+        }
+
+        .cell .amber-rail.waiting {
+            background: linear-gradient(180deg, rgba(251, 191, 36, 0.85), rgba(251, 191, 36, 0.55));
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .cell .amber-rail {
+                transition: none;
+            }
+        }
+
+        /* LLM elements within intermediate row cells */
+        .flow-row.intermediate .cell.agent {
+            justify-content: center;
+        }
+
+        .flow-row.intermediate .cell.external {
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Legacy support - will be removed */
+        .lane-column {
+            display: flex;
+            flex-direction: column;
+            gap: 34px;
+            position: relative;
+            transition: min-height 0.4s ease;
+        }
+
+        .lane-row.is-hidden,
+        .is-hidden {
+            display: none !important;
+        }
+
+        .agent-timeline-rail {
+            display: none;
+        }
+
+        .agent-connector {
+            position: absolute;
+            left: 20px;
+            top: 68px;
+            width: 5px;
+            background: rgba(251, 191, 36, 0.88);
+            box-shadow: 0 0 16px rgba(251, 191, 36, 0.6);
+            transform: translateX(-50%) scaleY(0);
+            transform-origin: top center;
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease, height 0.4s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .agent-connector.active {
+            opacity: 1;
+            transform: translateX(-50%) scaleY(1);
+        }
+
+        .external-placeholder {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .lane-row {
+            position: relative;
+            min-height: 122px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .lane-row.agent-row {
+            justify-content: flex-start;
+        }
+
+        .lane-row.guard {
+            justify-content: center;
+        }
+
+        .agent-stack {
+            position: relative;
+            width: 100%;
+            max-width: 260px;
+            padding-left: 72px;
+        }
+
+        .agent-stack .event-card {
+            width: 100%;
+        }
+
+        .agent-node {
+            position: absolute;
+            left: 20px;
+            top: 61px;
+            transform: translate(-50%, -50%) scale(0.4);
+            transform-origin: center;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(251, 191, 36, 0.2);
+            border: 2px solid rgba(251, 191, 36, 0.6);
+            box-shadow: 0 0 0 rgba(251, 191, 36, 0.0);
+            opacity: 0;
+            transition: transform 0.35s ease, opacity 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+            z-index: 2;
+        }
+
+        .agent-node::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.45), rgba(251, 191, 36, 0));
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        .agent-node.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            background: rgba(251, 191, 36, 0.9);
+            box-shadow: 0 0 18px rgba(251, 191, 36, 0.35);
+        }
+
+        .agent-node.active::after {
+            opacity: 0.4;
+        }
+
+        .agent-node.waiting {
+            animation: nodeWaiting 1.1s ease-in-out infinite;
+            box-shadow: 0 0 22px rgba(251, 191, 36, 0.6);
+        }
+
+        .agent-node.waiting::before {
+            content: '';
+            position: absolute;
+            inset: -12px;
+            border-radius: 50%;
+            border: 2.5px solid rgba(251, 191, 36, 0.7);
+            animation: ripple 1.8s ease-out infinite;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .agent-node.waiting::after {
+            content: '';
+            position: absolute;
+            inset: -12px;
+            border-radius: 50%;
+            border: 2.5px solid rgba(251, 191, 36, 0.5);
+            animation: ripple 1.8s ease-out infinite 0.6s;
+            pointer-events: none;
+            background: transparent;
+            z-index: 10;
+        }
+
+        .llm-call-node {
+            position: absolute;
+            left: 20px;
+            top: 61px;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(251, 191, 36, 0.9);
+            border: 2px solid rgba(251, 191, 36, 0.6);
+            box-shadow: 0 0 12px rgba(251, 191, 36, 0.5);
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            z-index: 3;
+        }
+
+        .llm-call-node.active {
+            opacity: 1;
+        }
+
+        .llm-connector-top,
+        .llm-connector-2-top {
+            position: absolute;
+            left: 20px;
+            bottom: 50%;
+            width: 5px;
+            background: rgba(251, 191, 36, 0.88);
+            box-shadow: 0 0 16px rgba(251, 191, 36, 0.6);
+            transform: translateX(-50%) scaleY(0);
+            transform-origin: bottom center;
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease, height 0.4s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .llm-connector-top.active,
+        .llm-connector-2-top.active {
+            opacity: 1;
+            transform: translateX(-50%) scaleY(1);
+        }
+
+        .llm-connector-bottom,
+        .llm-connector-2-bottom {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            width: 5px;
+            background: rgba(251, 191, 36, 0.88);
+            box-shadow: 0 0 16px rgba(251, 191, 36, 0.6);
+            transform: translateX(-50%) scaleY(0);
+            transform-origin: top center;
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease, height 0.4s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .llm-connector-bottom.active,
+        .llm-connector-2-bottom.active {
+            opacity: 1;
+            transform: translateX(-50%) scaleY(1);
+        }
+
+        .llm-call-node-2 {
+            position: absolute;
+            left: 20px;
+            top: 61px;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(251, 191, 36, 0.9);
+            border: 2px solid rgba(251, 191, 36, 0.6);
+            box-shadow: 0 0 12px rgba(251, 191, 36, 0.5);
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            z-index: 3;
+        }
+
+        .llm-call-node-2.active {
+            opacity: 1;
+        }
+
+        .agent-external-line-2 {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            width: calc(var(--agent-to-external-gap) + 200px);
+            height: 2px;
+            transform: translateY(-50%) translateX(0) scaleX(1);
+            transform-origin: left center;
+            background: linear-gradient(90deg, rgba(74, 222, 128, 0.25), rgba(74, 222, 128, 0.95));
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.35);
+            border-radius: 999px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+            z-index: 4;
+        }
+
+        .agent-external-line-2::after {
+            content: '';
+            position: absolute;
+            left: calc(100% - 8px);
+            top: 50%;
+            transform: translateY(-50%);
+            border-left: 8px solid rgba(74, 222, 128, 0.95);
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+
+        .agent-external-line-2.active {
+            opacity: 1;
+        }
+
+        .external-return-line-2 {
+            position: absolute;
+            right: calc(100% + 16px);
+            top: 61px;
+            width: calc(var(--agent-to-external-gap) + 185px);
+            height: 2px;
+            transform: translateX(0) scaleX(1);
+            transform-origin: right center;
+            background: repeating-linear-gradient(90deg,
+                    rgba(251, 191, 36, 0.24) 0,
+                    rgba(251, 191, 36, 0.24) 6px,
+                    transparent 6px,
+                    transparent 12px);
+            border-radius: 999px;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        .external-return-line-2::after {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-right: 8px solid rgba(251, 191, 36, 0.7);
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+
+        .external-return-line-2.active {
+            opacity: 1;
+        }
+
+        .agent-line {
+            position: absolute;
+            left: calc(100% + 16px);
+            width: calc(var(--guard-to-agent-gap) - 100px);
+            height: 2px;
+            transform: translateY(-50%) scaleX(0);
+            transform-origin: left center;
+            opacity: 0;
+            border-radius: 999px;
+            pointer-events: none;
+            transition: opacity 0.35s ease, transform 0.45s ease;
+            z-index: 5;
+        }
+
+        .agent-line::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+        }
+
+        .agent-line.outbound {
+            top: 54px;
+            background: repeating-linear-gradient(90deg, rgba(147, 197, 253, 0.85) 0, rgba(147, 197, 253, 0.85) 12px, transparent 12px, transparent 20px);
+            box-shadow: 0 0 12px rgba(147, 197, 253, 0.25);
+        }
+
+        .agent-line.outbound::after {
+            left: calc(100% - 5px);
+            border-left: 5px solid rgba(147, 197, 253, 0.85);
+            border-top: 3px solid transparent;
+            border-bottom: 3px solid transparent;
+        }
+
+        .agent-line.return {
+            top: 61px;
+            background: linear-gradient(90deg, rgba(74, 222, 128, 0.15), rgba(74, 222, 128, 0.95));
+            box-shadow: 0 0 22px rgba(74, 222, 128, 0.45);
+            transform-origin: right center;
+        }
+
+        .agent-line.return::after {
+            left: -2px;
+            border-right: 5px solid rgba(74, 222, 128, 0.95);
+            border-top: 3px solid transparent;
+            border-bottom: 3px solid transparent;
+        }
+
+        .agent-line.blocked {
+            top: 61px;
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.95));
+            box-shadow: 0 0 22px rgba(239, 68, 68, 0.45);
+            transform-origin: right center;
+        }
+
+        .agent-line.blocked::after {
+            left: -2px;
+            border-right: 5px solid rgba(239, 68, 68, 0.95);
+            border-top: 3px solid transparent;
+            border-bottom: 3px solid transparent;
+        }
+
+        .redact-label {
+            position: absolute;
+            top: -22px;
+            right: 10px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: rgba(249, 115, 22, 0.95);
+            text-shadow: 0 0 8px rgba(249, 115, 22, 0.5);
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .agent-line.active {
+            opacity: 1;
+            transform: translateY(-50%) scaleX(1);
+        }
+
+        .agent-line[data-span] {
+            width: calc(var(--guard-to-agent-gap) - (var(--saber-buffer) + 24px));
+        }
+
+        .agent-external-line {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            width: calc(var(--agent-to-external-gap) + 200px);
+            height: 2px;
+            transform: translateY(-50%) translateX(0) scaleX(0);
+            transform-origin: left center;
+            background: linear-gradient(90deg, rgba(74, 222, 128, 0.25), rgba(74, 222, 128, 0.95));
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.35);
+            border-radius: 999px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease, transform 0.45s ease;
+            z-index: 4;
+        }
+
+        .agent-external-line::after {
+            content: '';
+            position: absolute;
+            left: calc(100% - 8px);
+            top: 50%;
+            transform: translateY(-50%);
+            border-left: 8px solid rgba(74, 222, 128, 0.95);
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+
+        .agent-external-line.active {
+            opacity: 1;
+            transform: translateY(-50%) translateX(0) scaleX(1);
+        }
+
+        /* LLM lines fade in without scale animation */
+        .intermediate .agent-external-line {
+            opacity: 0;
+            transform: translateY(-50%) translateX(0) scaleX(1);
+            transition: opacity 0.6s ease;
+        }
+
+        .intermediate .agent-external-line.active {
+            opacity: 1;
+        }
+
+        .external-return-line {
+            position: absolute;
+            right: calc(100% + 16px);
+            top: 61px;
+            width: calc(var(--agent-to-external-gap) + 185px);
+            height: 2px;
+            transform: translateX(0) scaleX(0);
+            transform-origin: right center;
+            background: repeating-linear-gradient(90deg,
+                    rgba(251, 191, 36, 0.24) 0,
+                    rgba(251, 191, 36, 0.24) 6px,
+                    transparent 6px,
+                    transparent 12px);
+            border-radius: 999px;
+            opacity: 0;
+            transition: opacity 0.35s ease, transform 0.45s ease, top 0.4s ease;
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        .external-return-line::after {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-right: 8px solid rgba(251, 191, 36, 0.7);
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+
+        .external-return-line.active {
+            opacity: 1;
+            transform: translateX(0) scaleX(1);
+        }
+
+        /* LLM return lines fade in without scale animation */
+        .intermediate .external-return-line {
+            opacity: 0;
+            transform: translateX(0) scaleX(1);
+            transition: opacity 0.6s ease;
+        }
+
+        .intermediate .external-return-line.active {
+            opacity: 1;
+        }
+
+        @keyframes nodeWaiting {
+            0%, 100% {
+                box-shadow: 0 0 18px rgba(251, 191, 36, 0.5);
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                box-shadow: 0 0 32px rgba(251, 191, 36, 0.8);
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(3.5);
+                opacity: 0;
+            }
+        }
+
+        .agent-segment {
+            display: none;
+        }
+
+        .event-card {
+            background: rgba(15, 23, 42, 0.56);
+            border: 1px solid rgba(148, 163, 255, 0.28);
+            border-radius: 14px;
+            padding: 18px 22px;
+            box-shadow: 0 16px 38px rgba(15, 23, 42, 0.42);
+            backdrop-filter: blur(14px);
+            position: relative;
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.45s ease, transform 0.45s ease;
+        }
+
+        .event-card.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* LLM cards fade in place without any motion */
+        .event-card.llm {
+            opacity: 0;
+            transform: translateY(0);
+            transition: opacity 0.6s ease;
+        }
+
+        .event-card.llm.active {
+            opacity: 1;
+        }
+
+        .event-card h4 {
+            font-size: 0.84rem;
+            margin-bottom: 8px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .event-card p {
+            font-size: 0.78rem;
+            line-height: 1.55;
+            color: rgba(226, 232, 255, 0.8);
+            margin-bottom: 0;
+        }
+
+        .event-card.agent h4 { color: rgba(251, 191, 36, 0.94); }
+        .event-card.guard h4 { color: rgba(74, 222, 128, 0.95); }
+        .event-card.external.llm h4 { color: rgba(192, 132, 252, 0.95); }
+        .event-card.external.tool h4 { color: rgba(252, 211, 77, 0.95); }
+        .event-card.external.delivery h4 { color: rgba(96, 165, 250, 0.95); }
+
+        .guard-check {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .guard-check span {
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: rgba(74, 222, 128, 0.85);
+        }
+
+        .guard-check .pill {
+            padding: 4px 12px;
+            border-radius: 999px;
+            background: rgba(34, 197, 94, 0.18);
+            border: 1px solid rgba(34, 197, 94, 0.28);
+            color: rgba(74, 222, 128, 0.95);
+        }
+
+        .guard-beam-container {
+            /* Grid child - inline styles handle grid positioning */
+        }
+
+        .guard-axis {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            --beam-top-offset: 20px;
+            --beam-bottom-offset: 40px;
+            --beam-min-height: 200px;
+        }
+
+        .guard-beam {
+            position: absolute;
+            top: var(--beam-top-offset);
+            bottom: var(--beam-bottom-offset);
+            left: calc(50% + var(--saber-shift));
+            width: var(--saber-core-width);
+            min-height: var(--beam-min-height);
+            transform: translateX(-50%);
+            background: linear-gradient(180deg, rgba(147, 197, 253, 0.3), rgba(147, 197, 253, 0.15));
+            border-radius: 999px;
+            box-shadow: 0 0 16px rgba(147, 197, 253, 0.4);
+            opacity: 0.6;
+            transition: background 1.5s ease, box-shadow 1.5s ease, opacity 1.5s ease, top 0.4s ease, bottom 0.4s ease;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .flow-visualization.beam-active .guard-beam {
+            background: linear-gradient(180deg, rgba(74, 222, 128, 0.85), rgba(74, 222, 128, 0.45));
+            box-shadow: 0 0 28px rgba(74, 222, 128, 0.65);
+            opacity: 1;
+        }
+
+        .flow-visualization.beam-blocked .guard-beam {
+            background: linear-gradient(180deg, rgba(239, 68, 68, 0.85), rgba(239, 68, 68, 0.45));
+            box-shadow: 0 0 28px rgba(239, 68, 68, 0.65);
+            opacity: 1;
+        }
+
+        .flow-visualization.beam-redacted .guard-beam {
+            background: linear-gradient(180deg, rgba(249, 115, 22, 0.85), rgba(249, 115, 22, 0.45));
+            box-shadow: 0 0 28px rgba(249, 115, 22, 0.65);
+            opacity: 1;
+        }
+
+        .beam-flare {
+            position: absolute;
+            left: calc(50% + var(--saber-shift));
+            top: var(--beam-top-offset);
+            bottom: var(--beam-bottom-offset);
+            width: calc(var(--saber-core-width) * 2.6);
+            transform: translateX(-50%);
+            background: linear-gradient(180deg, rgba(147, 197, 253, 0.42), rgba(147, 197, 253, 0.12));
+            border-radius: 999px;
+            box-shadow: 0 0 22px rgba(147, 197, 253, 0.35);
+            opacity: 0;
+            transition: opacity 1.5s ease, top 0.4s ease, bottom 0.4s ease;
+            pointer-events: none;
+            z-index: 6;
+        }
+
+        .beam-flare.active {
+            opacity: 1;
+        }
+
+        .beam-flare.blocked {
+            background: linear-gradient(180deg, rgba(239, 68, 68, 0.42), rgba(239, 68, 68, 0.12));
+            box-shadow: 0 0 22px rgba(239, 68, 68, 0.35);
+            opacity: 1;
+        }
+
+        .beam-flare.redacted {
+            background: linear-gradient(180deg, rgba(249, 115, 22, 0.42), rgba(249, 115, 22, 0.12));
+            box-shadow: 0 0 22px rgba(249, 115, 22, 0.35);
+            opacity: 1;
+        }
+
+        .guard-plate {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: rgba(74, 222, 128, 0.2);
+            border-radius: 999px;
+            opacity: 0;
+            transition: opacity 0.3s ease, box-shadow 0.3s ease;
+            pointer-events: none;
+            z-index: 7;
+        }
+
+        .guard-plate.active {
+            opacity: 1;
+            box-shadow: 0 0 16px rgba(74, 222, 128, 0.5);
+            background: rgba(74, 222, 128, 0.7);
+            animation: platePulse 0.6s ease-out;
+        }
+
+        @keyframes platePulse {
+            0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+            50% { transform: translateX(-50%) scale(1.2); opacity: 1; }
+        }
+
+        .guard-pulse {
+            display: none;
+        }
+
+        .connector {
+            position: absolute;
+            height: 2px;
+            top: 50%;
+            width: calc(var(--guard-to-external-gap) - 10px);
+            transform: translateY(-50%) scaleX(0);
+            transform-origin: left center;
+            opacity: 0;
+            transition: opacity 0.35s ease, transform 0.45s ease;
+            border-radius: 999px;
+            pointer-events: none;
+        }
+
+        .connector.right {
+            left: calc(100% + 16px);
+        }
+
+        .connector.left {
+            right: calc(100% + 16px);
+            transform-origin: right center;
+        }
+
+        .connector[data-span] {
+            width: calc(var(--guard-to-external-gap) - (var(--saber-buffer) + 24px));
+        }
+
+        .connector.dotted {
+            background: repeating-linear-gradient(90deg, rgba(147, 197, 253, 0.85) 0, rgba(147, 197, 253, 0.85) 10px, transparent 10px, transparent 20px);
+            box-shadow: 0 0 12px rgba(147, 197, 253, 0.25);
+        }
+
+        .connector.solid {
+            background: linear-gradient(90deg, rgba(74, 222, 128, 0.15), rgba(74, 222, 128, 0.95));
+            box-shadow: 0 0 22px rgba(74, 222, 128, 0.45);
+        }
+
+        .connector.active {
+            opacity: 1;
+            transform: translateY(-50%) scaleX(1);
+        }
+
+        .connector.left.active {
+            transform: translateY(-50%) scaleX(1);
+        }
+
+        .connector::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+        }
+
+        .connector.right::after {
+            left: calc(100% - 8px);
+            border-left: 8px solid rgba(74, 222, 128, 0.95);
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+
+        .connector.dotted.right::after {
+            border-left-color: rgba(147, 197, 253, 0.85);
+        }
+
+        .connector.left::after {
+            left: -4px;
+            border-right: 8px solid rgba(74, 222, 128, 0.95);
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+
+        @keyframes dashFlow {
+            from { background-position: 0 0; }
+            to { background-position: 140px 0; }
+        }
+
+        .connector.dotted.active {
+            animation: dashFlow 1.2s linear forwards;
+        }
+
+        /* Benefits Grid */
+        .benefit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+            margin: 44px 0 68px;
+        }
+
+        .benefit {
+            background: rgba(15, 23, 42, 0.52);
+            border: 1px solid rgba(102, 126, 234, 0.25);
+            border-radius: 16px;
+            padding: 36px;
+            backdrop-filter: blur(12px);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .benefit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #22d3ee 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .benefit:hover::before {
+            transform: scaleX(1);
+        }
+
+        .benefit:hover {
+            transform: translateY(-10px);
+            border-color: rgba(148, 163, 255, 0.6);
+            box-shadow: 0 16px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .benefit h3 {
+            margin: 0 0 16px;
+            color: #a5b4fc;
+            font-size: 1.5em;
+        }
+
+        .benefit p {
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 1.05em;
+            line-height: 1.65;
+        }
+
+        /* Code Section */
+        .code-section {
+            background: rgba(0, 0, 0, 0.28);
+            border-radius: 16px;
+            padding: 42px;
+            margin: 48px 0;
+            border: 1px solid rgba(102, 126, 234, 0.22);
+        }
+
+        pre {
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 26px;
+            overflow-x: auto;
+            border-left: 4px solid #667eea;
+            margin: 26px 0 0;
+        }
+
+        code {
+            color: #f8f8f2;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .code-comment {
+            color: #6a9955;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 64px 0;
+        }
+
+        .cta-section h2 {
+            font-size: 2.6em;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #22d3ee 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 22px;
+            flex-wrap: wrap;
+            margin: 32px 0;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #667eea 0%, #22d3ee 100%);
+            color: white;
+            padding: 18px 42px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: inline-block;
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.35);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 40px rgba(102, 126, 234, 0.45);
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            border: 2px solid #667eea;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .flow-header {
+                margin-bottom: 40px;
+            }
+
+            .cycle-controls {
+                order: 1;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .flow-legend {
+                order: 2;
+                width: 100%;
+                align-items: center;
+            }
+
+            .cycle-tab {
+                font-size: 0.7rem;
+                padding: 6px 12px;
+            }
+        }
+
+        @media (max-width: 1060px) {
+            .flow-grid {
+                grid-template-columns: 1fr 260px;
+            }
+
+            .lane-column.external {
+                grid-column: span 2;
+                padding-top: 18px;
+                border-top: 1px solid rgba(148, 163, 255, 0.14);
+            }
+        }
+
+        @media (max-width: 880px) {
+            .hero-title h1 {
+                font-size: 2.6em;
+            }
+
+            .flow-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .lane-column.guard {
+                order: -1;
+                margin-bottom: 28px;
+            }
+
+            .lane-column.external {
+                order: 3;
+            }
+
+            .lane-row,
+            .lane-row.guard {
+                min-height: auto;
+            }
+
+            .guard-beam,
+            .beam-flare,
+            .connector,
+            .agent-external-line,
+            .external-return-line,
+            .agent-segment,
+            .aiceberg-logo,
+            .approval-message,
+            .flow-header {
+                display: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 48px 18px 70px;
+            }
+
+            .stat-box {
+                padding: 36px 28px;
+            }
+
+            .flow-visualization {
+                padding: 38px 24px 48px;
+            }
+
+            .benefit-grid {
+                gap: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-title">
+            <span class="hero-kicker">Explainable • Deterministic • Real-Time</span>
+            <h1>Ship Agentic AI with Complete Visibility</h1>
+            <p>Guardian Agent provides deterministic oversight for every agentic AI decision. Your team moves fast while security gets full visibility—all with millisecond latency and patented explainable AI technology.</p>
+        </div>
+
+        <!-- Stat Box -->
+        <div class="stat-box">
+            <h2>Speed Without Sacrifice</h2>
+            <p>Traditional security tools only see the final output—missing every step inside the agent workflow. Guardian Agent monitors every event as it happens, linking inputs to outputs across LLM calls, tool executions, and memory access. Complete visibility at millisecond latency means security teams can see everything without slowing down deployment.</p>
+        </div>
+
+        <!-- How It Works -->
+        <h2>How It Works</h2>
+        <p>Guardian Agent listens for events at key moments—before and after LLM calls, tool executions, and memory operations. When something happens, the agent sends a validation request (dotted line). Guardian Agent checks it against rules, makes a pass or block decision, and sends back an approval (solid green line). Every request and response gets linked by event IDs, so teams can trace decisions back to what triggered them. The whole thing runs without touching the core agent code.</p>
+
+        <div class="flow-visualization">
+            <div class="flow-header">
+                <div class="cycle-controls" role="tablist" aria-label="Guardian Agent cycle scenarios">
+                    <button class="cycle-tab is-active" role="tab" aria-selected="true" aria-controls="flow-panel" data-cycle-target="approval" tabindex="0">Approved</button>
+                    <button class="cycle-tab" role="tab" aria-selected="false" aria-controls="flow-panel" data-cycle-target="redact" tabindex="-1">Redacted</button>
+                    <button class="cycle-tab" role="tab" aria-selected="false" aria-controls="flow-panel" data-cycle-target="block" tabindex="-1">Blocked</button>
+                </div>
+                <div class="flow-legend">
+                    <div class="legend-item">
+                        <div class="legend-line dotted"></div>
+                        <span>Request for validation</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line solid"></div>
+                        <span>Explainable approval</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flow-grid" id="flow-panel" role="tabpanel" aria-live="polite">
+                <!-- Guard Lane Globals (beam, logo, approval message) -->
+                <div class="guard-beam-container" style="position: absolute; top: 0; bottom: 0; left: calc(50% - 130px); width: 260px; z-index: 10; pointer-events: none;">
+                    <div class="guard-axis">
+                        <img src="https://aiceberg.ai/wp-content/uploads/2025/09/Aiceberg-logo-light.svg" alt="Aiceberg" class="aiceberg-logo" style="position: absolute; top: -70px; left: 50%; transform: translateX(-40%); width: 200px; pointer-events: auto; z-index: 50; filter: drop-shadow(0 0 12px rgba(74, 222, 128, 0.6)) drop-shadow(0 0 24px rgba(74, 222, 128, 0.3));">
+                        <div class="approval-message" data-approval-message style="position: absolute; left: calc(100% + 12px); width: max-content; pointer-events: auto; z-index: 50;">
+                            <span class="message-text"></span>
+                            <span class="bear-icon">🐻‍❄️</span>
+                        </div>
+                        <div class="guard-beam"></div>
+                        <div class="beam-flare" data-flare></div>
+                    </div>
+                </div>
+
+                <!-- Row 0: MessageAdded -->
+                <div class="flow-row" data-row-id="message-added" data-cycles="all">
+                    <div class="cell agent">
+                        <div class="event-card agent" data-card="message-added">
+                            <h4>MessageAddedEvent</h4>
+                            <p>User asks: "Send $500 to john@example.com via our payment API"</p>
+                        </div>
+                        <div class="amber-rail" data-rail="message-added"></div>
+                        <div class="amber-node" data-node="message-added"></div>
+                        <div class="amber-connector" data-connector="message-added-to-before-model"></div>
+                        <span class="agent-line outbound" data-line="message-added-out"></span>
+                        <span class="agent-line return" data-line="message-added-back">
+                            <span class="redact-label" data-redact-label="message-added-back">PII Redacted</span>
+                        </span>
+                        <span class="agent-line blocked" data-line="message-added-blocked"></span>
+                        <div class="blocked-reason" data-blocked-reason>Against Aiceberg policies, blocked: identified jailbreak</div>
+                    </div>
+                    <div class="cell guard">
+                        <div class="guard-pulse" data-pulse="1"></div>
+                    </div>
+                    <div class="cell external"></div>
+                </div>
+
+                <!-- Row 1: BeforeModelCall -->
+                <div class="flow-row" data-row-id="before-model-call" data-cycles="approval,redact">
+                    <div class="cell agent">
+                        <div class="event-card agent" data-card="before-model-call">
+                            <h4>BeforeModelCallEvent</h4>
+                            <p>Agent prepares prompt: "Parse payment request and validate recipient"</p>
+                        </div>
+                        <div class="amber-rail" data-rail="before-model-call"></div>
+                        <div class="amber-node" data-node="before-model-call"></div>
+                        <span class="agent-line outbound" data-line="before-model-out"></span>
+                        <span class="agent-line return" data-line="before-model-back"></span>
+                    </div>
+                    <div class="cell guard">
+                        <div class="guard-pulse" data-pulse="2"></div>
+                        <div class="connector solid right" data-connector="llm-dispatch" data-span="medium"></div>
+                    </div>
+                    <div class="cell external"></div>
+                </div>
+
+                <!-- Row 1.5: LLM Call 1 (intermediate) -->
+                <div class="flow-row intermediate" data-row-id="llm-call-1" data-cycles="approval,redact">
+                    <div class="cell agent">
+                        <div class="amber-rail" data-rail="llm-call-node"></div>
+                        <div class="llm-call-node" data-node="llm-call-node"></div>
+                        <span class="agent-external-line" data-line="llm-api-call"></span>
+                    </div>
+                    <div class="cell guard"></div>
+                    <div class="cell external">
+                        <div class="event-card external llm" data-card="llm-call">
+                            <h4>LLM call executing</h4>
+                            <p>Claude analyzes request and determines payment API tool is needed</p>
+                        </div>
+                        <span class="external-return-line" data-line="llm-response-return"></span>
+                    </div>
+                </div>
+
+                <!-- Row 2: AfterModelCall -->
+                <div class="flow-row" data-row-id="after-model-call" data-cycles="approval,redact">
+                    <div class="cell agent">
+                        <div class="event-card agent" data-card="after-model-call">
+                            <h4>AfterModelCallEvent</h4>
+                            <p>Response: "I'll use the payment tool to transfer $500 to john@example.com"</p>
+                        </div>
+                        <div class="amber-rail" data-rail="after-model-call"></div>
+                        <div class="amber-node" data-node="after-model-call"></div>
+                        <div class="amber-connector" data-connector="after-model-to-before-tool"></div>
+                        <span class="agent-line outbound" data-line="after-model-out"></span>
+                        <span class="agent-line return" data-line="after-model-back"></span>
+                    </div>
+                    <div class="cell guard">
+                        <div class="guard-pulse" data-pulse="3"></div>
+                    </div>
+                    <div class="cell external"></div>
+                </div>
+
+                <!-- Row 3: BeforeToolCall -->
+                <div class="flow-row" data-row-id="before-tool-call" data-cycles="approval">
+                    <div class="cell agent">
+                        <div class="event-card agent" data-card="before-tool-call">
+                            <h4>BeforeToolCallEvent</h4>
+                            <p>Calling payment API: transfer($500, "john@example.com")</p>
+                        </div>
+                        <div class="amber-rail" data-rail="before-tool-call"></div>
+                        <div class="amber-node" data-node="before-tool-call"></div>
+                        <div class="amber-connector" data-connector="before-tool-to-after-tool"></div>
+                        <span class="agent-line outbound" data-line="before-tool-out"></span>
+                        <span class="agent-line return" data-line="before-tool-back"></span>
+                    </div>
+                    <div class="cell guard">
+                        <div class="guard-pulse" data-pulse="4"></div>
+                        <div class="connector solid right" data-connector="tool-dispatch" data-span="medium"></div>
+                    </div>
+                    <div class="cell external">
+                        <div class="event-card external tool" data-card="tool-exec">
+                            <h4>Payment API</h4>
+                            <p>Stripe API executes: recipient verified, balance checked, $500 transferred</p>
+                        </div>
+                        <div class="connector dotted left" data-connector="tool-response" data-span="medium"></div>
+                    </div>
+                </div>
+
+                <!-- Row 4: AfterToolCall -->
+                <div class="flow-row" data-row-id="after-tool-call" data-cycles="approval">
+                    <div class="cell agent">
+                        <div class="event-card agent" data-card="after-tool-call">
+                            <h4>AfterToolCallEvent</h4>
+                            <p>Payment API returned: {status: "success", transaction_id: "txn_789"}</p>
+                        </div>
+                        <div class="amber-rail" data-rail="after-tool-call"></div>
+                        <div class="amber-node" data-node="after-tool-call"></div>
+                        <div class="amber-connector" data-connector="after-tool-to-before-model-2"></div>
+                        <span class="agent-line outbound" data-line="after-tool-out"></span>
+                        <span class="agent-line return" data-line="after-tool-back"></span>
+                    </div>
+                    <div class="cell guard">
+                        <div class="guard-pulse" data-pulse="5"></div>
+                    </div>
+                    <div class="cell external"></div>
+                </div>
+
+                <!-- Row 5: BeforeModelCall 2 -->
+                <div class="flow-row" data-row-id="before-model-call-2" data-cycles="approval">
+                    <div class="cell agent">
+                        <div class="event-card agent" data-card="before-model-call-2">
+                            <h4>BeforeModelCallEvent</h4>
+                            <p>Asking Claude to format confirmation message with transaction details</p>
+                        </div>
+                        <div class="amber-rail" data-rail="before-model-call-2"></div>
+                        <div class="amber-node" data-node="before-model-call-2"></div>
+                        <span class="agent-line outbound" data-line="before-model-2-out"></span>
+                        <span class="agent-line return" data-line="before-model-2-back"></span>
+                    </div>
+                    <div class="cell guard">
+                        <div class="guard-pulse" data-pulse="2"></div>
+                        <div class="connector solid right" data-connector="llm-dispatch" data-span="medium"></div>
+                    </div>
+                    <div class="cell external"></div>
+                </div>
+
+                <!-- Row 5.5: LLM Call 2 (intermediate) -->
+                <div class="flow-row intermediate" data-row-id="llm-call-2" data-cycles="approval">
+                    <div class="cell agent">
+                        <div class="amber-rail" data-rail="llm-call-node-2"></div>
+                        <div class="llm-call-node-2" data-node="llm-call-node-2"></div>
+                        <span class="agent-external-line-2" data-line="llm-api-call-2"></span>
+                    </div>
+                    <div class="cell guard"></div>
+                    <div class="cell external">
+                        <div class="event-card external llm" data-card="llm-call-2">
+                            <h4>LLM call executing</h4>
+                            <p>Claude formats friendly confirmation with transaction ID</p>
+                        </div>
+                        <span class="external-return-line-2" data-line="llm-response-2-return"></span>
+                    </div>
+                </div>
+
+                <!-- Row 6: AfterModelCall 2 -->
+                <div class="flow-row" data-row-id="after-model-call-2" data-cycles="approval">
+                    <div class="cell agent">
+                        <div class="event-card agent" data-card="after-model-call-2">
+                            <h4>AfterModelCallEvent</h4>
+                            <p>Formatted response: "Payment of $500 sent successfully! Txn: txn_789"</p>
+                        </div>
+                        <div class="amber-rail" data-rail="after-model-call-2"></div>
+                        <div class="amber-node" data-node="after-model-call-2"></div>
+                        <div class="amber-connector" data-connector="after-model-2-to-after-invocation"></div>
+                        <span class="agent-line outbound" data-line="after-model-2-out"></span>
+                        <span class="agent-line return" data-line="after-model-2-back"></span>
+                    </div>
+                    <div class="cell guard">
+                        <div class="guard-pulse" data-pulse="3"></div>
+                    </div>
+                    <div class="cell external"></div>
+                </div>
+
+                <!-- Row 7: AfterInvocation -->
+                <div class="flow-row" data-row-id="after-invocation" data-cycles="all">
+                    <div class="cell agent">
+                        <div class="event-card agent" data-card="after-invocation">
+                            <h4>AfterInvocationEvent</h4>
+                            <p>Final response ready to deliver to user</p>
+                        </div>
+                        <div class="amber-rail" data-rail="after-invocation"></div>
+                        <div class="amber-node" data-node="after-invocation"></div>
+                        <span class="agent-line outbound" data-line="after-invocation-out"></span>
+                        <span class="agent-line return" data-line="after-invocation-back"></span>
+                    </div>
+                    <div class="cell guard">
+                        <div class="guard-pulse" data-pulse="6"></div>
+                        <div class="connector solid right" data-connector="final-release" data-span="medium"></div>
+                    </div>
+                    <div class="cell external"></div>
+                </div>
+
+                <!-- Row 8: User Output -->
+                <div class="flow-row" data-row-id="user-output" data-cycles="approval">
+                    <div class="cell agent"></div>
+                    <div class="cell guard"></div>
+                    <div class="cell external">
+                        <div class="event-card external delivery" data-card="user-output">
+                            <h4>User response delivered</h4>
+                            <p>"Payment of $500 sent successfully to john@example.com! Transaction ID: txn_789"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p>This is the oversight loop: dotted lines show requests flowing to Guardian Agent for validation, solid green lines show deterministic approvals returning. LLM and tool calls only execute after passing through a gate, and every decision is traceable back to the originating event—providing complete explainability for audit and compliance.</p>
+
+        <script>
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const flowViz = document.querySelector('.flow-visualization');
+            const beamFlare = document.querySelector('[data-flare]');
+            const approvalMessageEl = document.querySelector('[data-approval-message]');
+            const blockedReasonEl = document.querySelector('[data-blocked-reason]');
+
+            const approvalMessages = [
+                'Looking good!',
+                'All clear ✓',
+                'Ship it!',
+                'Nice and safe',
+                'No red flags',
+                'Checks out perfectly',
+                'Clean bill of health',
+                'Nothing suspicious',
+                'Solid choice',
+                'Zero concerns',
+                'Perfectly safe',
+                'Good vibes only',
+                'Trust factor: high',
+                'Squeaky clean',
+                'Green light!',
+                'No issues detected',
+                'This one\'s fine',
+                'Safe passage granted',
+                'Looks legit to me',
+                'Risk: basically zero'
+            ];
+
+            const blockMessages = [
+                'Nope!',
+                'Hard pass',
+                'Not happening',
+                'Blocked!',
+                'That\'s a no',
+                'Against policy',
+                'Can\'t allow that',
+                'Not on my watch',
+                'Absolutely not',
+                'Denied!',
+                'Sorry, no',
+                'Not a chance',
+                'Request blocked',
+                'Nice try',
+                'Can\'t do that',
+                'Policy violation',
+                'No way',
+                'Stopped!'
+            ];
+
+            const redactMessages = [
+                'Cleaned that up',
+                'Keeping it safe',
+                'PII filtered',
+                'Nice try',
+                'Data scrubbed',
+                'Info redacted',
+                'Protected!',
+                'Sanitized',
+                'Filtered out',
+                'Privacy first',
+                'That\'s better',
+                'Redacted!',
+                'Removed PII',
+                'Cleaned up',
+                'Data secured',
+                'Info protected'
+            ];
+
+            // Content for different cycles
+            const cycleContent = {
+                approval: {
+                    'message-added': { h4: 'UserQueryEvent', p: 'User asks: "Send $500 to john@example.com via our payment API"' },
+                    'before-model-call': { h4: 'BeforeModelCallEvent', p: 'Agent prepares prompt: "Parse payment request and validate recipient"' },
+                    'llm-call': { h4: 'LLM call executing', p: 'Claude analyzes request and determines payment API tool is needed' },
+                    'after-model-call': { h4: 'AfterModelCallEvent', p: 'Response: "I\'ll use the payment tool to transfer $500 to john@example.com"' },
+                    'before-tool-call': { h4: 'BeforeToolCallEvent', p: 'Calling payment API: transfer($500, "john@example.com")' },
+                    'tool-exec': { h4: 'Payment API', p: 'Stripe API executes: recipient verified, balance checked, $500 transferred' },
+                    'after-tool-call': { h4: 'AfterToolCallEvent', p: 'Payment API returned: {status: "success", transaction_id: "txn_789"}' },
+                    'before-model-call-2': { h4: 'BeforeModelCallEvent', p: 'Asking Claude to format confirmation message with transaction details' },
+                    'llm-call-2': { h4: 'LLM call executing', p: 'Claude formats friendly confirmation with transaction ID' },
+                    'after-model-call-2': { h4: 'AfterModelCallEvent', p: 'Formatted response: "Payment of $500 sent successfully! Txn: txn_789"' },
+                    'after-invocation': { h4: 'FinalAgentResponseEvent', p: 'Final response ready to deliver to user' },
+                    'user-output': { h4: 'User response delivered', p: '"Payment of $500 sent successfully to john@example.com! Transaction ID: txn_789"' }
+                },
+                block: {
+                    'message-added': { h4: 'UserQueryEvent', p: 'User asks: "How can I hack into a system?"' },
+                    'after-invocation': { h4: 'Request Blocked', p: 'Guardian Agent blocked this request due to policy violation. No downstream tools or LLM calls executed.' }
+                },
+                redact: {
+                    'message-added': { h4: 'UserQueryEvent', p: 'User asks: "My SSN is 123-45-6789, can you help me find auto insurance rates?"' },
+                    'before-model-call': { h4: 'BeforeModelCallEvent', p: 'Redacted prompt sent: "My SSN is [REDACTED], can you help me find auto insurance rates?"' },
+                    'llm-call': { h4: 'LLM call executing', p: 'Claude processes redacted prompt and provides insurance guidance' },
+                    'after-model-call': { h4: 'AfterModelCallEvent', p: 'Claude returns insurance guidance with no exposure of sensitive data' },
+                    'after-invocation': { h4: 'FinalAgentResponseEvent', p: 'Safe response delivered with PII protected throughout the flow' }
+                }
+            };
+
+            let currentCycle = 'block';
+
+            function updateCardContent(cardId, cycle) {
+                const content = cycleContent[cycle]?.[cardId];
+                if (!content) return;
+
+                const card = document.querySelector(`[data-card="${cardId}"]`);
+                if (!card) return;
+
+                const h4 = card.querySelector('h4');
+                const p = card.querySelector('p');
+                if (h4) h4.textContent = content.h4;
+                if (p) p.textContent = content.p;
+            }
+
+            const stepsApproval = [
+                // First event: no rail (nothing before it)
+                { nodes: ['message-added'] },
+                { cards: ['message-added'] },
+                { lines: ['message-added-out'], waitingNodes: ['message-added'] },
+                { pulses: ['1'], beam: true, bearPosition: 'message-added-back' },
+                { lines: ['message-added-back'], clearWaitingNodes: ['message-added'] },
+
+                // Subsequent events: rail → node → card
+                { rails: ['before-model-call'] },
+                { nodes: ['before-model-call'] },
+                { cards: ['before-model-call'], connectors: ['message-added-to-before-model'] },
+                { lines: ['before-model-out'], waitingNodes: ['before-model-call'] },
+                { pulses: ['2'], beam: true, bearPosition: 'before-model-back' },
+                { lines: ['before-model-back'], clearWaitingNodes: ['before-model-call'] },
+
+                // LLM execution: rail stops, everything appears at once with glow effect
+                { rails: ['llm-call-node'], nodes: ['llm-call-node'], cards: ['llm-call'], lines: ['llm-api-call', 'llm-response-return'] },
+
+                { rails: ['after-model-call'] },
+                { nodes: ['after-model-call'] },
+                { cards: ['after-model-call'] },
+                { lines: ['after-model-out'], waitingNodes: ['after-model-call'] },
+                { pulses: ['3'], beam: true, bearPosition: 'after-model-back' },
+                { lines: ['after-model-back'], clearWaitingNodes: ['after-model-call'] },
+
+                { rails: ['before-tool-call'] },
+                { nodes: ['before-tool-call'] },
+                { cards: ['before-tool-call'], connectors: ['after-model-to-before-tool'] },
+                { lines: ['before-tool-out'], waitingNodes: ['before-tool-call'] },
+                { lines: ['before-tool-back'], clearWaitingNodes: ['before-tool-call'] },
+
+                { rails: ['after-tool-call'] },
+                { nodes: ['after-tool-call'] },
+                { cards: ['after-tool-call'], connectors: ['before-tool-to-after-tool'] },
+                { lines: ['after-tool-out'], waitingNodes: ['after-tool-call'] },
+                { lines: ['after-tool-back'], clearWaitingNodes: ['after-tool-call'] },
+
+                { rails: ['before-model-call-2'] },
+                { nodes: ['before-model-call-2'] },
+                { cards: ['before-model-call-2'], connectors: ['after-tool-to-before-model-2'] },
+                { lines: ['before-model-2-out'], waitingNodes: ['before-model-call-2'] },
+                { pulses: ['2'], beam: true, bearPosition: 'before-model-2-back' },
+                { lines: ['before-model-2-back'], clearWaitingNodes: ['before-model-call-2'] },
+
+                // LLM execution: rail stops, everything appears at once with glow effect
+                { rails: ['llm-call-node-2'], nodes: ['llm-call-node-2'], cards: ['llm-call-2'], lines: ['llm-api-call-2', 'llm-response-2-return'] },
+
+                { rails: ['after-model-call-2'] },
+                { nodes: ['after-model-call-2'] },
+                { cards: ['after-model-call-2'], connectors: ['llm-to-after-model-2'] },
+                { lines: ['after-model-2-out'], waitingNodes: ['after-model-call-2'] },
+                { pulses: ['3'], beam: true, bearPosition: 'after-model-2-back' },
+                { lines: ['after-model-2-back'], clearWaitingNodes: ['after-model-call-2'] },
+
+                { rails: ['after-invocation'] },
+                { nodes: ['after-invocation'] },
+                { cards: ['after-invocation'], connectors: ['after-model-2-to-after-invocation'] },
+                { lines: ['after-invocation-out'], waitingNodes: ['after-invocation'] },
+                { pulses: ['6'], beam: true, bearPosition: 'after-invocation-back' },
+                { lines: ['after-invocation-back'], clearWaitingNodes: ['after-invocation'] },
+                { cards: ['user-output'] }
+            ];
+
+            const stepsBlock = [
+                // First event: no rail
+                { nodes: ['message-added'] },
+                { cards: ['message-added'] },
+                { lines: ['message-added-out'], waitingNodes: ['message-added'] },
+                { pulses: ['1'], beam: true, bearPosition: 'blocked-response', beamType: 'block' },
+                { lines: ['message-added-blocked'], showBlockedReason: true, clearWaitingNodes: ['message-added'] },
+                // Second event: rail → node → card
+                { rails: ['after-invocation'] },
+                { nodes: ['after-invocation'] },
+                { cards: ['after-invocation'] }
+            ];
+
+            const stepsRedact = [
+                // First event: PII detected and redacted (orange beam)
+                { nodes: ['message-added'] },
+                { cards: ['message-added'] },
+                { lines: ['message-added-out'], waitingNodes: ['message-added'] },
+                { pulses: ['1'], beam: true, bearPosition: 'redacted-response', beamType: 'redact' },
+                { lines: ['message-added-back'], showRedactLabel: true, clearWaitingNodes: ['message-added'] },
+
+                // Subsequent events: working with safe redacted data (green beam - approved)
+                { rails: ['before-model-call'] },
+                { nodes: ['before-model-call'] },
+                { cards: ['before-model-call'], connectors: ['message-added-to-before-model'] },
+                { lines: ['before-model-out'], waitingNodes: ['before-model-call'] },
+                { pulses: ['2'], beam: true, bearPosition: 'before-model-back', beamType: 'approval' },
+                { lines: ['before-model-back'], clearWaitingNodes: ['before-model-call'] },
+
+                // LLM execution: rail stops, everything appears at once with glow effect
+                { rails: ['llm-call-node'], nodes: ['llm-call-node'], cards: ['llm-call'], lines: ['llm-api-call', 'llm-response-return'] },
+
+                { rails: ['after-model-call'] },
+                { nodes: ['after-model-call'] },
+                { cards: ['after-model-call'] },
+                { lines: ['after-model-out'], waitingNodes: ['after-model-call'] },
+                { pulses: ['3'], beam: true, bearPosition: 'after-model-back', beamType: 'approval' },
+                { lines: ['after-model-back'], clearWaitingNodes: ['after-model-call'] },
+
+                { rails: ['after-invocation'] },
+                { nodes: ['after-invocation'] },
+                { cards: ['after-invocation'], connectors: ['after-model-to-before-tool'] },
+                { lines: ['after-invocation-out'], waitingNodes: ['after-invocation'] },
+                { pulses: ['4'], beam: true, bearPosition: 'after-invocation-back', beamType: 'approval' },
+                { lines: ['after-invocation-back'], clearWaitingNodes: ['after-invocation'] }
+            ];
+
+            let steps = stepsBlock;
+
+            const stepDuration = 400;
+            let timerId = null;
+            let currentStep = 0;
+            let beamTimeout = null;
+
+            const cardElements = document.querySelectorAll('.event-card');
+            const guardConnectorElements = document.querySelectorAll('.connector');
+            const agentConnectorElements = document.querySelectorAll('.agent-connector');
+            const lineElements = document.querySelectorAll('[data-line]');
+            const nodeElements = document.querySelectorAll('[data-node]');
+            const pulseElements = document.querySelectorAll('.guard-pulse');
+
+            function triggerBeam(bearPosition, type = 'approval') {
+                if (!flowViz || !beamFlare) return;
+
+                // Clear previous beam states
+                flowViz.classList.remove('beam-active', 'beam-blocked', 'beam-redacted');
+                beamFlare.classList.remove('active', 'blocked', 'redacted');
+
+                // Set appropriate beam state
+                if (type === 'block') {
+                    flowViz.classList.add('beam-blocked');
+                    beamFlare.classList.add('blocked');
+                } else if (type === 'redact') {
+                    flowViz.classList.add('beam-redacted');
+                    beamFlare.classList.add('redacted');
+                } else {
+                    flowViz.classList.add('beam-active');
+                    beamFlare.classList.add('active');
+                }
+
+                // Show random message based on type
+                if (approvalMessageEl && bearPosition) {
+                    // Dynamically calculate bear position based on actual element position
+                    let topPosition = 35; // fallback
+
+                    // Try to find the actual line element
+                    let line = document.querySelector(`[data-line="${bearPosition}"]`);
+                    if (!line) {
+                        // Fallback: find associated card for blocked/redacted
+                        const cardId = bearPosition.replace('-back', '').replace('-response', '');
+                        line = document.querySelector(`[data-card="${cardId}"]`);
+                    }
+
+                    if (line) {
+                        const flowGrid = document.getElementById('flow-panel');
+                        if (flowGrid) {
+                            // Find the parent row
+                            const row = line.closest('.flow-row');
+                            if (row) {
+                                const gridRect = flowGrid.getBoundingClientRect();
+                                const rowRect = row.getBoundingClientRect();
+                                // Position bear at 54px from row top (where dotted line is)
+                                topPosition = (rowRect.top - gridRect.top) + 54;
+                            }
+                        }
+                    }
+
+                    approvalMessageEl.style.top = `${topPosition}px`;
+
+                    // Choose message array based on type
+                    let messageArray = approvalMessages;
+                    if (type === 'block') {
+                        messageArray = blockMessages;
+                    } else if (type === 'redact') {
+                        messageArray = redactMessages;
+                    }
+
+                    const randomMessage = messageArray[Math.floor(Math.random() * messageArray.length)];
+                    const messageText = approvalMessageEl.querySelector('.message-text');
+                    if (messageText) {
+                        messageText.textContent = randomMessage;
+                    }
+
+                    // Set color class for message
+                    approvalMessageEl.classList.remove('show', 'blocked', 'redacted');
+                    if (type === 'block') {
+                        approvalMessageEl.classList.add('blocked');
+                    } else if (type === 'redact') {
+                        approvalMessageEl.classList.add('redacted');
+                    }
+
+                    void approvalMessageEl.offsetWidth; // Trigger reflow
+                    approvalMessageEl.classList.add('show');
+                }
+
+                clearTimeout(beamTimeout);
+                beamTimeout = setTimeout(() => {
+                    flowViz.classList.remove('beam-active', 'beam-blocked', 'beam-redacted');
+                    beamFlare.classList.remove('active', 'blocked', 'redacted');
+                }, 1000);
+            }
+
+            function setActiveState({ cards = [], lines = [], clearLines = [], nodes = [], waitingNodes = [], clearWaitingNodes = [], connectors = [], clearConnectors = [], rails = [], waitingRails = [], clearRails = [], pulses = [], beam = false, bearPosition = null, beamType = 'approval', showBlockedReason = false, showRedactLabel = false }) {
+                // Activate rails first so they appear before nodes
+                rails.forEach(id => {
+                    document.querySelectorAll(`[data-rail="${id}"]`).forEach(rail => {
+                        rail.classList.add('active');
+                    });
+                });
+
+                waitingRails.forEach(id => {
+                    document.querySelectorAll(`[data-rail="${id}"]`).forEach(rail => {
+                        rail.classList.add('waiting');
+                        rail.classList.add('active');
+                    });
+                });
+
+                clearRails.forEach(id => {
+                    document.querySelectorAll(`[data-rail="${id}"]`).forEach(rail => {
+                        rail.classList.remove('active');
+                        rail.classList.remove('waiting');
+                    });
+                });
+
+                cards.forEach(id => {
+                    document.querySelectorAll(`[data-card="${id}"]`).forEach(card => {
+                        card.classList.add('active');
+                    });
+                });
+
+                lines.forEach(id => {
+                    document.querySelectorAll(`[data-line="${id}"]`).forEach(line => {
+                        line.classList.add('active');
+                    });
+                    document.querySelectorAll(`[data-connector="${id}"]`).forEach(connector => {
+                        connector.classList.add('active');
+                    });
+                });
+
+                clearLines.forEach(id => {
+                    document.querySelectorAll(`[data-line="${id}"]`).forEach(line => {
+                        line.classList.remove('active');
+                    });
+                    document.querySelectorAll(`[data-connector="${id}"]`).forEach(connector => {
+                        connector.classList.remove('active');
+                    });
+                });
+
+                nodes.forEach(id => {
+                    document.querySelectorAll(`[data-node="${id}"]`).forEach(node => {
+                        node.classList.add('active');
+                    });
+                });
+
+                waitingNodes.forEach(id => {
+                    document.querySelectorAll(`[data-node="${id}"]`).forEach(node => {
+                        node.classList.add('waiting');
+                        node.classList.add('active');
+                    });
+                });
+
+                clearWaitingNodes.forEach(id => {
+                    document.querySelectorAll(`[data-node="${id}"]`).forEach(node => {
+                        node.classList.remove('waiting');
+                    });
+                });
+
+                connectors.forEach(id => {
+                    document.querySelectorAll(`[data-connector="${id}"]`).forEach(connector => {
+                        connector.classList.add('active');
+                    });
+                });
+
+                clearConnectors.forEach(id => {
+                    document.querySelectorAll(`[data-connector="${id}"]`).forEach(connector => {
+                        connector.classList.remove('active');
+                    });
+                });
+
+                pulses.forEach(id => {
+                    document.querySelectorAll(`[data-pulse="${id}"]`).forEach(pulse => {
+                        pulse.classList.remove('active');
+                        void pulse.offsetWidth;
+                        pulse.classList.add('active');
+                    });
+                });
+
+                if (beam && bearPosition) {
+                    triggerBeam(bearPosition, beamType);
+                }
+
+                // Show blocked reason
+                if (showBlockedReason && blockedReasonEl) {
+                    blockedReasonEl.classList.remove('show');
+                    void blockedReasonEl.offsetWidth;
+                    blockedReasonEl.classList.add('show');
+                }
+
+                // Show redact label on the arrow
+                if (showRedactLabel) {
+                    lines.forEach(id => {
+                        const label = document.querySelector(`[data-redact-label="${id}"]`);
+                        if (label) {
+                            label.style.opacity = '1';
+                        }
+                    });
+                }
+            }
+
+            function resetFlow() {
+                cardElements.forEach(card => card.classList.remove('active'));
+                guardConnectorElements.forEach(connector => connector.classList.remove('active'));
+                agentConnectorElements.forEach(connector => connector.classList.remove('active'));
+                lineElements.forEach(line => line.classList.remove('active'));
+                nodeElements.forEach(node => {
+                    node.classList.remove('active');
+                    node.classList.remove('waiting');
+                });
+                pulseElements.forEach(pulse => pulse.classList.remove('active'));
+
+                // Clear all connectors including LLM connectors
+                document.querySelectorAll('[data-connector]').forEach(el => el.classList.remove('active'));
+
+                // Clear all lines including external lines
+                document.querySelectorAll('[data-line]').forEach(el => el.classList.remove('active'));
+
+                // Clear all rails
+                document.querySelectorAll('[data-rail]').forEach(el => {
+                    el.classList.remove('active');
+                    el.classList.remove('waiting');
+                });
+
+                // Clear redact labels
+                document.querySelectorAll('[data-redact-label]').forEach(el => el.style.opacity = '0');
+
+                flowViz?.classList.remove('beam-active', 'beam-blocked', 'beam-redacted', 'cycle-block', 'cycle-redact', 'cycle-approval');
+                beamFlare?.classList.remove('active', 'blocked', 'redacted');
+                if (approvalMessageEl) {
+                    approvalMessageEl.classList.remove('show', 'blocked', 'redacted');
+                }
+                if (blockedReasonEl) {
+                    blockedReasonEl.classList.remove('show');
+                }
+                clearTimeout(beamTimeout);
+                currentStep = 0;
+            }
+
+            let userSelectedCycle = false;
+            let autoplayResumeTimer = null;
+            const AUTOPLAY_RESUME_DELAY = 15000; // 15 seconds
+
+            // Layout constants
+            const LAYOUT_CONSTANTS = {
+                CARD_HEIGHT: 122,
+                NODE_CENTER_OFFSET: 61,
+                CONNECTOR_START_OFFSET: 68,
+                LLM_NODE_HEIGHT: 10,
+                CONTAINER_BOTTOM_PADDING: 64,
+                CONTAINER_TOP_PADDING: 24
+            };
+
+            // Layout metadata per cycle (simplified for row-based layout)
+            const layoutMeta = {
+                block: {
+                    rowGap: 200,
+                    visibleRows: ['message-added', 'after-invocation']
+                },
+                redact: {
+                    rowGap: 180,
+                    visibleRows: ['message-added', 'before-model-call', 'llm-call-1', 'after-model-call', 'after-invocation']
+                },
+                approval: {
+                    rowGap: 170,
+                    visibleRows: ['message-added', 'before-model-call', 'llm-call-1', 'after-model-call',
+                                  'before-tool-call', 'after-tool-call', 'before-model-call-2', 'llm-call-2',
+                                  'after-model-call-2', 'after-invocation', 'user-output']
+                }
+            };
+
+            function updateTabStates() {
+                document.querySelectorAll('.cycle-tab').forEach(tab => {
+                    const target = tab.getAttribute('data-cycle-target');
+                    const isActive = target === currentCycle;
+
+                    tab.classList.toggle('is-active', isActive);
+                    tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                    tab.setAttribute('tabindex', isActive ? '0' : '-1');
+                });
+            }
+
+            function calculateRowPosition(rowIndex, rowGap) {
+                return rowIndex * rowGap;
+            }
+
+            function calculateLLMNodePosition(beforeRowIndex, rowGap) {
+                const beforeRowPos = calculateRowPosition(beforeRowIndex, rowGap);
+                return beforeRowPos + LAYOUT_CONSTANTS.NODE_CENTER_OFFSET + (rowGap / 2);
+            }
+
+            function calculateConnectorHeight(rowGap) {
+                return rowGap - 14;
+            }
+
+            function calculateLLMConnectorHeight(rowGap) {
+                return (rowGap / 2) - 5;
+            }
+
+            function calculateContainerHeight(numRows, rowGap) {
+                return ((numRows - 1) * rowGap) + LAYOUT_CONSTANTS.CARD_HEIGHT + LAYOUT_CONSTANTS.CONTAINER_BOTTOM_PADDING;
+            }
+
+            function syncGuardGeometry() {
+                const guardAxis = document.querySelector('.guard-axis');
+                const guardContainer = document.querySelector('.guard-beam-container');
+                if (!guardAxis || !guardContainer) return;
+
+                const visibleRows = Array.from(document.querySelectorAll('.flow-row:not(.is-hidden)'));
+                if (visibleRows.length === 0) return;
+
+                const guardRect = guardAxis.getBoundingClientRect();
+
+                // SIMPLE APPROACH: Fixed padding from container edges
+                // Beam extends from near-top to near-bottom regardless of event count
+                const beamTopOffset = 5;       // Fixed 5px from top (shows beam comes from Aiceberg)
+                const beamBottomOffset = 40;   // Fixed 40px from bottom
+                const beamHeight = guardRect.height - beamTopOffset - beamBottomOffset;
+
+                // Log for verification
+                console.table({
+                    'Guard Height': guardRect.height,
+                    'Visible Events': visibleRows.length,
+                    'Top Offset': beamTopOffset,
+                    'Bottom Offset': beamBottomOffset,
+                    'Beam Height': beamHeight
+                });
+
+                // Set CSS variables on the guard axis
+                guardAxis.style.setProperty('--beam-top-offset', `${beamTopOffset}px`);
+                guardAxis.style.setProperty('--beam-bottom-offset', `${beamBottomOffset}px`);
+                guardAxis.style.setProperty('--beam-min-height', `${beamHeight}px`);
+
+                // Store per-row CSS variables for connector alignment
+                visibleRows.forEach(row => {
+                    const rowRect = row.getBoundingClientRect();
+                    const rowMidpoint = (rowRect.top - guardRect.top) + (rowRect.height / 2);
+                    const rowId = row.getAttribute('data-row-id');
+                    guardAxis.style.setProperty(`--row-offset-${rowId}`, `${rowMidpoint}px`);
+                });
+
+                // Update amber rail heights to span between visible nodes
+                updateAmberRailHeights();
+            }
+
+            function updateAmberRailHeights() {
+                const visibleRows = Array.from(document.querySelectorAll('.flow-row:not(.is-hidden)'));
+                const rowsWithRails = visibleRows.filter(row => row.querySelector('.amber-rail'));
+
+                // First row has no rail (nothing before it)
+                if (rowsWithRails.length > 0) {
+                    const firstRail = rowsWithRails[0].querySelector('.amber-rail');
+                    if (firstRail) {
+                        firstRail.style.display = 'none';
+                    }
+                }
+
+                // Each subsequent row gets a rail that connects from previous node to current node
+                for (let i = 1; i < rowsWithRails.length; i++) {
+                    const previousRow = rowsWithRails[i - 1];
+                    const currentRow = rowsWithRails[i];
+
+                    const previousCell = previousRow.querySelector('.cell.agent');
+                    const currentCell = currentRow.querySelector('.cell.agent');
+                    const rail = currentCell?.querySelector('.amber-rail');
+
+                    if (rail && previousCell && currentCell) {
+                        const previousRect = previousCell.getBoundingClientRect();
+                        const currentRect = currentCell.getBoundingClientRect();
+
+                        // Get the previous node (either standard amber-node or llm-call-node)
+                        const previousNode = previousCell.querySelector('.amber-node') || previousCell.querySelector('.llm-call-node') || previousCell.querySelector('.llm-call-node-2');
+                        const currentNode = currentCell.querySelector('.amber-node') || currentCell.querySelector('.llm-call-node') || currentCell.querySelector('.llm-call-node-2');
+
+                        if (previousNode && currentNode) {
+                            const prevNodeRect = previousNode.getBoundingClientRect();
+                            const currNodeRect = currentNode.getBoundingClientRect();
+
+                            // Calculate node centers
+                            const previousNodeBottom = prevNodeRect.top + (prevNodeRect.height / 2) + (prevNodeRect.height / 2);
+                            const currentNodeTop = currNodeRect.top + (currNodeRect.height / 2) - (currNodeRect.height / 2);
+
+                            // Rail top position (relative to current cell)
+                            const railTop = previousNodeBottom - currentRect.top;
+
+                            // Rail height spans from previous node bottom to current node top
+                            const railHeight = currentNodeTop - previousNodeBottom;
+
+                            rail.style.display = 'block';
+                            rail.style.top = `${railTop}px`;
+                            rail.style.height = `${Math.max(railHeight, 0)}px`;
+                            rail.style.transformOrigin = 'top';
+                        }
+                    }
+                }
+            }
+
+            // Keep backward compatibility alias
+            const measureBeamBounds = syncGuardGeometry;
+
+            function applyCycleState(cycleId) {
+                const layout = layoutMeta[cycleId];
+                if (!layout) return;
+
+                const rowGap = layout.rowGap;
+                const visibleRows = layout.visibleRows;
+
+                // Hide all rows first
+                document.querySelectorAll('.flow-row').forEach(row => {
+                    row.classList.add('is-hidden');
+                });
+
+                // Show rows that match this cycle
+                visibleRows.forEach(rowId => {
+                    const row = document.querySelector(`[data-row-id="${rowId}"]`);
+                    if (row) {
+                        row.classList.remove('is-hidden');
+                        // Set row height: intermediate rows are half-height
+                        const isIntermediate = row.classList.contains('intermediate');
+                        row.style.minHeight = isIntermediate ? `${rowGap / 2}px` : `${rowGap}px`;
+                    }
+                });
+
+                // Update amber connector heights for this rowGap
+                document.querySelectorAll('.amber-connector').forEach(conn => {
+                    conn.style.height = `${rowGap - 14}px`;
+                });
+
+                // Update LLM connector heights (half of rowGap minus small offset)
+                const llmConnectorHeight = (rowGap / 2) - 5;
+                document.querySelectorAll('.llm-connector-top, .llm-connector-bottom, .llm-connector-2-top, .llm-connector-2-bottom').forEach(conn => {
+                    conn.style.height = `${llmConnectorHeight}px`;
+                });
+
+                flowViz.dataset.cycle = cycleId;
+
+                // Measure and update beam bounds after layout settles
+                // Use double RAF to ensure layout is complete
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        measureBeamBounds();
+                    });
+                });
+            }
+
+            function startCycleAt(cycleId) {
+                clearTimeout(timerId);
+                clearTimeout(autoplayResumeTimer);
+
+                currentCycle = cycleId;
+
+                // Update steps based on cycle
+                if (currentCycle === 'block') {
+                    steps = stepsBlock;
+                } else if (currentCycle === 'redact') {
+                    steps = stepsRedact;
+                } else {
+                    steps = stepsApproval;
+                }
+
+                // Apply layout state (CSS variables + visibility)
+                applyCycleState(currentCycle);
+
+                // Update cycle class on flow visualization for beam colors
+                flowViz?.classList.remove('cycle-block', 'cycle-redact', 'cycle-approval');
+                flowViz?.classList.add(`cycle-${currentCycle}`);
+
+                // Update card content for new cycle
+                Object.keys(cycleContent[currentCycle]).forEach(cardId => {
+                    updateCardContent(cardId, currentCycle);
+                });
+
+                // Update tab states
+                updateTabStates();
+
+                // Restart animation
+                resetFlow();
+
+                if (prefersReducedMotion) {
+                    steps.forEach(step => setActiveState(step));
+                    return;
+                }
+
+                timerId = setTimeout(playNextStep, 500);
+            }
+
+            function playNextStep() {
+                if (currentStep >= steps.length) {
+                    clearTimeout(timerId);
+                    timerId = setTimeout(() => {
+                        resetFlow();
+
+                        // Only auto-advance if user hasn't selected a cycle
+                        if (!userSelectedCycle) {
+                            const nextCycle = currentCycle === 'approval' ? 'redact' :
+                                             currentCycle === 'redact' ? 'block' : 'approval';
+                            startCycleAt(nextCycle);
+                        } else {
+                            // Loop the current cycle if user selected it
+                            requestAnimationFrame(() => {
+                                timerId = setTimeout(playNextStep, 500);
+                            });
+                        }
+                    }, 2400);
+                    return;
+                }
+
+                setActiveState(steps[currentStep]);
+                currentStep += 1;
+                timerId = setTimeout(playNextStep, stepDuration);
+            }
+
+            function handleTabClick(event) {
+                const tab = event.currentTarget;
+                const targetCycle = tab.getAttribute('data-cycle-target');
+
+                if (!targetCycle) return;
+
+                // If clicking already active tab, resume autoplay
+                if (targetCycle === currentCycle && userSelectedCycle) {
+                    userSelectedCycle = false;
+                    clearTimeout(autoplayResumeTimer);
+                    return;
+                }
+
+                // User manually selected a cycle, pause autoplay
+                userSelectedCycle = true;
+                startCycleAt(targetCycle);
+
+                // Resume autoplay after 15 seconds of inactivity
+                clearTimeout(autoplayResumeTimer);
+                autoplayResumeTimer = setTimeout(() => {
+                    userSelectedCycle = false;
+                }, AUTOPLAY_RESUME_DELAY);
+            }
+
+            function handleTabKeydown(event) {
+                const tabs = Array.from(document.querySelectorAll('.cycle-tab'));
+                const currentIndex = tabs.indexOf(event.currentTarget);
+                let targetIndex = currentIndex;
+
+                switch(event.key) {
+                    case 'ArrowLeft':
+                    case 'ArrowUp':
+                        event.preventDefault();
+                        targetIndex = currentIndex > 0 ? currentIndex - 1 : tabs.length - 1;
+                        break;
+                    case 'ArrowRight':
+                    case 'ArrowDown':
+                        event.preventDefault();
+                        targetIndex = currentIndex < tabs.length - 1 ? currentIndex + 1 : 0;
+                        break;
+                    case 'Home':
+                        event.preventDefault();
+                        targetIndex = 0;
+                        break;
+                    case 'End':
+                        event.preventDefault();
+                        targetIndex = tabs.length - 1;
+                        break;
+                    case 'Enter':
+                    case ' ':
+                        event.preventDefault();
+                        handleTabClick(event);
+                        return;
+                    default:
+                        return;
+                }
+
+                tabs[targetIndex].focus();
+            }
+
+            function initFlow() {
+                // Initialize with approval cycle content
+                currentCycle = 'approval';
+                steps = stepsApproval;
+
+                // Apply initial layout
+                applyCycleState(currentCycle);
+
+                flowViz?.classList.add('cycle-approval');
+                Object.keys(cycleContent[currentCycle]).forEach(cardId => {
+                    updateCardContent(cardId, currentCycle);
+                });
+
+                updateTabStates();
+
+                if (prefersReducedMotion) {
+                    applyCycleState(currentCycle);
+                    steps.forEach(step => setActiveState(step));
+                    return;
+                }
+                resetFlow();
+                timerId = setTimeout(playNextStep, 600);
+            }
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    clearTimeout(timerId);
+                    clearTimeout(autoplayResumeTimer);
+                } else {
+                    initFlow();
+                }
+            });
+
+            // Add click and keyboard handlers to cycle tabs
+            document.querySelectorAll('.cycle-tab').forEach(tab => {
+                tab.addEventListener('click', handleTabClick);
+                tab.addEventListener('keydown', handleTabKeydown);
+            });
+
+            // Recalculate beam bounds on window resize (debounced)
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    measureBeamBounds();
+                }, 150);
+            });
+
+            initFlow();
+        </script>
+
+        <!-- Benefits -->
+        <h2>What You Get</h2>
+
+        <div class="benefit-grid">
+            <div class="benefit">
+                <h3>Complete Explainability</h3>
+                <p>Guardian Agent monitors 100+ risk signal types across every LLM call, tool execution, and decision point. Every action is traceable and explainable—providing the audit trail security teams require.</p>
+            </div>
+
+            <div class="benefit">
+                <h3>Deterministic Speed</h3>
+                <p>Built independently from LLMs using patented explainable AI technology. Consistent decisions in under 200ms mean your agentic AI stays responsive while remaining secure and compliant.</p>
+            </div>
+
+            <div class="benefit">
+                <h3>Framework Agnostic</h3>
+                <p>LlamaIndex, Amazon Strands, OpenAI Agents SDK, LangChain—if your framework emits events, Guardian Agent provides oversight. Deploy anywhere your agentic AI runs.</p>
+            </div>
+        </div>
+
+        <!-- Code Example -->
+        <div class="code-section">
+            <h2>Quick Integration Example</h2>
+
+            <pre><code>import requests
+
+class GuardianAgentMonitor:
+    def on_llm_start(self, prompt):
+        <span class="code-comment"># Send to Guardian Agent for validation</span>
+        response = requests.post(
+            "https://api.aiceberg.ai/event",
+            json={"input": prompt, "event_type": "agt_llm"},
+            headers={"Authorization": f"Bearer {API_KEY}"}
+        )
+
+        <span class="code-comment"># Block if risk signals detected</span>
+        if response.json()["event_result"] == "blocked":
+            raise Exception("Risk signal detected")
+
+        <span class="code-comment"># Continue with explainable approval</span>
+        return response.json()["event_id"]</code></pre>
+
+            <p style="color: rgba(255,255,255,0.75); margin-top: 20px;">Wire this into your agentic AI event listeners. Guardian Agent provides deterministic oversight and complete explainability from the first request.</p>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <h2>Deploy Agentic AI with Confidence</h2>
+            <div class="cta-buttons">
+                <a href="#" class="cta-button">View Integration Guides</a>
+                <a href="#" class="cta-button secondary">Request Access</a>
+            </div>
+            <p style="color: rgba(255,255,255,0.65); margin-top: 30px;">
+                <strong>Framework-specific guides:</strong> Step-by-step integration for LlamaIndex, Amazon Strands, OpenAI Agents SDK, and LangChain with complete examples and best practices.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
